@@ -1,0 +1,15 @@
+.contact_info {
+    padding-top: 50px;
+    float: right;
+    text-align: center;
+}
+.contact_main{
+	width: 600px;
+    margin: auto;
+}
+.contact_img {
+    display: inline;
+}
+.title{
+	text-align: center;
+}

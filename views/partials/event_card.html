@@ -1,0 +1,49 @@
+<div class="card_container">	
+	<div class="card_date">
+		{{event_date}}
+		<div class="reg_close_date">
+			{{reg_close}}
+		</div>
+	</div>
+	<div class="card_info">
+		<h4>{{event_name}}</h4>
+		<div class="grid66 floatLeft">
+			<p>{{event_desc}}</p>
+			<div id="event_lead" class="center m50">
+			<label>Event Lead: </label>
+				<a href="mailto:{{event_lead_email}}" class="bold" target="_blank">{{event_lead}}</a>
+			</div>
+		</div>
+		
+		<div class="center grid33 floatRight mar_top10">
+			<div>Online Payment:</div>
+			
+			<a href="{{event_payment}}" target="_blank">
+				<img src="http://www.cubscoutpack97.org/images/square_logo.png" width="150" height="100">
+			</a>
+			<!-- <p id="note">Note: that you may not see your registration confirmed below if payment has not been verified.</p> -->
+			{{admin}}
+			{{#if admin}}
+				<input type="button" class="btn" id="btnEmailParticipants" value="Email Participant List" onclick="EmailParticipantList()">
+			{{/if}}
+		</div>	
+		<div class="w100">
+			<input type="button" value="Participants" onclick="showhide({{event_id}})" class="card_button">
+			<input type="button" value="Register" onclick="Register(241)" class="card_button" disabled="">		
+		</div>
+		<div class="participants {{event_id}}">
+			{{#each participants}}
+				{{>participant this}}
+			{{/each}}
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	function showhide(classname){
+		if($('.' + classname + ':visible').length == 0){
+			$("." + classname).show();
+		}else{
+			$("." + classname).hide();
+		}
+	}
+</script>
