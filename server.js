@@ -5,7 +5,7 @@ const firebase = require("firebase");
 const server = new Hapi.Server();
 const events = {"events":[
 	{"event_name":"End of Year Pack Meeting/Pack Picnic Crossover",
-	"event_date":"Sat, Jun 2nd, 2018",
+	"event_date":"Sat, Jun 2nd, 2019",
 	"reg_close":"04-21-2018",
 	"event_id":"227",
 	"event_desc":"2018 Super Trip to Gatlinburg TN. We will be sleeping with the sharks. Includes next day admission to Ripley's Aquarium. Must be at least 5 years old to attend!  For more information please see the",
@@ -81,17 +81,17 @@ const committee = {"contacts":[
 	"contact_desc":"Long walks on the beach",
 	"contact_email":"committeechair@cubscoutspack97.com"}
 ]};
-var config = {
-	apiKey: "AIzaSyC8tXMTvQer1VO12DqhQREWXw6z60RSq6w",
-    authDomain: "cub-scout-pack97.firebaseapp.com",
-    databaseURL: "https://cub-scout-pack97.firebaseio.com",
-    projectId: "cub-scout-pack97",
-    storageBucket: "",
-    messagingSenderId: "1009955650805"
-};
-firebase.initializeApp(config);
+// var config = {
+// 	apiKey: "AIzaSyC8tXMTvQer1VO12DqhQREWXw6z60RSq6w",
+//     authDomain: "cub-scout-pack97.firebaseapp.com",
+//     databaseURL: "https://cub-scout-pack97.firebaseio.com",
+//     projectId: "cub-scout-pack97",
+//     storageBucket: "",
+//     messagingSenderId: "1009955650805"
+// };
+// firebase.initializeApp(config);
 
-const database = firebase.database();
+// const database = firebase.database();
 
 server.register([require('vision'),require('inert')], (err) => {
 
@@ -211,6 +211,24 @@ server.route({
 	path:'/js/{js}',
 	handler:(request,reply)=>{
 		return reply.file(`./js/${request.params.js}`);
+	}
+});
+
+server.route({
+	method:'GET',
+	path:'/events/register/{email}',
+	handler: async function(request,reply){
+		console.log(request.params.email);
+		let responce;
+		try{
+			responce = await request(`10.5.0.7/api/pack97//api/pack97/parent/email/${request.params.email}`);
+			console.log(responce);
+		}catch (err){
+			logger.error('Http error', err);
+    		return res.status(500).send();
+		}
+
+		return reply.view('events_reg',responce);
 	}
 });
 
