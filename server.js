@@ -1,7 +1,7 @@
 'use strict';
 
 const Hapi = require('hapi');
-const request = require('request');
+const Wreck = require('wreck');
 const server = new Hapi.Server();
 const events = {"events":[
 	{"event_name":"End of Year Pack Meeting/Pack Picnic Crossover",
@@ -217,11 +217,14 @@ server.route({
 server.route({
 	method:'GET',
 	path:'/events/register/{email}',
-	handler: (request,reply) => {
-		return request(`10.5.0.7/api/pack97/api/pack97/parent/email/${request.params.email}`)
-			.catch ((err) => {
-				console.log(err);
-			})
+	handler: async (request,reply) => {
+		try{
+			const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/parent/email/${request.params.email}`);
+			const parent = JSON.parse(payload);
+			return reply.view(`events_reg`,parent[0]);
+		}catch(err){
+			console.log("failed" + err);
+		}
 	}
 });
 
