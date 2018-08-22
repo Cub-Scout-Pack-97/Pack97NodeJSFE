@@ -1,7 +1,6 @@
 'use strict';
 
 const Hapi = require('hapi');
-const firebase = require("firebase");
 const server = new Hapi.Server();
 const events = {"events":[
 	{"event_name":"End of Year Pack Meeting/Pack Picnic Crossover",
@@ -218,7 +217,7 @@ server.route({
 	method:'GET',
 	path:'/events/register/{email}',
 	handler: async function(request,reply){
-		console.log(request.params.email);
+		console.log()
 		let responce;
 		try{
 			responce = await request(`10.5.0.7/api/pack97//api/pack97/parent/email/${request.params.email}`);
