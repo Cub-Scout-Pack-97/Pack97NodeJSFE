@@ -1,2 +1,12 @@
-<h1>Events Reg</h1>
-{{first_name}}
+<form action="/events/registration" method='POST'>
+	<label for="email">Email</label>
+	<input type="email" name="email" id="email" value='{{email}}'>
+	<input type="input" name="_id" value="{{_id}}" class="hidden">
+	<input type="input" name="first_name" value="{{first_name}}">
+	<input type="input" name="last_name" value="{{last_name}}"> 
+	<input type="input" name="phone" value="{{phone}}">
+	{{#getattendees family}}
+		{{>attendees @attendee}}
+	{{/getattendees}}
+	<input type="submit">
+</form>

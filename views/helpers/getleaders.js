@@ -6,9 +6,9 @@ getleaders  = function(attendees, context){
 	}
 	var accum = '';
     for(var i = 0; i < attendees.length; i ++){
-        
-    	if(attendees[i].type === "leader"){
-            context.data.leader = {"name":attendees[i].name,"detail":attendees[i].detail};
+        const attendee = JSON.parse(attendees[i].replace(/'/g, '"'));
+    	if(attendee.type === "leader"){
+            context.data.leader = {"name":attendee.name,"detail":attendee.detail};
             context.data.index = i;
             accum += context.fn(this);
         }

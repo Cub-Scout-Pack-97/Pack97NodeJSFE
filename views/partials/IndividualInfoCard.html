@@ -1,11 +1,11 @@
 <div class="contact_card">
 	<div class="contact_img">
-		<img src="/images/{{scout_id}}.jpg">
+		<img src="/images/{{_id}}.jpg" onError="this.onerror=null;this.src='/images/default.jpg';" height="300">
 	</div>
 	<div class="contact_info">
-		<h3>{{contact_name}}</h3>
-		<span>{{contact_title}}</span>
-		<p>{{contact_desc}}</p>
+		<h3>{{first_name}} {{last_name}}</h3>
+		<span>{{title}}</span>
+		<p>{{desc}}</p>
 		<span><a href="mailto:{{contact_email}}">email me</a></span>
 	</div>
 </div>

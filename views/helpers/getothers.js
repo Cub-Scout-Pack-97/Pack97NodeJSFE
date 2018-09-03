@@ -6,9 +6,9 @@ getothers  = function(attendees, context){
 	}
 	var accum = '';
     for(var i = 0; i < attendees.length; i ++){
-        
-    	if(attendees[i].type === "other"){
-            context.data.other = {"name":attendees[i].name,"detail":attendees[i].detail};
+        const attendee = JSON.parse(attendees[i].replace(/'/g, '"'));
+    	if(attendee.type === "other"){
+            context.data.other = {"name":attendee.name,"detail":attendee.detail};
             context.data.index = i;
             accum += context.fn(this);
         }

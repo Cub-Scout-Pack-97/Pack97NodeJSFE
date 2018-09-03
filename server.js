@@ -18,11 +18,11 @@ const events = {"events":[
 		"contact_email":"johnkelley4477@gmail.com",
 		"verified":true,
 		"attendees":[
-			{"type":"other","name":"Mason S.","detail":"Male"},
-			{"type":"scout","name":"Cameron S.","detail":"Webelos: Nifflers"},
-			{"type":"leader","name":"John K.","detail":"Male"},
-			{"type":"adult","name":"Katie B.","detail":"Female"},
-			{"type":"scout","name":"Cooper S.","detail":"Tiger: Den 3"}
+			{'type':'other','name':'Mason S.','detail':'Male'},
+			{'type':'scout','name':'Cameron S.','detail':'Webelos: Nifflers'},
+			{'type':'leader','name':'John K.','detail':'Male'},
+			{'type':'adult','name':'Katie B.','detail':'Female'},
+			{'type':'scout','name':'Cooper S.','detail':'Tiger: Den 3'}
 		]},
 		{"contact_name":"James Forbes",
 		"contact_phone":"7045551234",
@@ -81,17 +81,6 @@ const committee = {"contacts":[
 	"contact_desc":"Long walks on the beach",
 	"contact_email":"committeechair@cubscoutspack97.com"}
 ]};
-// var config = {
-// 	apiKey: "AIzaSyC8tXMTvQer1VO12DqhQREWXw6z60RSq6w",
-//     authDomain: "cub-scout-pack97.firebaseapp.com",
-//     databaseURL: "https://cub-scout-pack97.firebaseio.com",
-//     projectId: "cub-scout-pack97",
-//     storageBucket: "",
-//     messagingSenderId: "1009955650805"
-// };
-// firebase.initializeApp(config);
-
-// const database = firebase.database();
 
 server.register([require('vision'),require('inert')], (err) => {
 
@@ -124,12 +113,22 @@ server.route({
 server.route({
 	method:"GET",
 	path:"/events",
-	handler: (request,reply) => {
-		let data = {};
-		data["events"] = events.events;
-		data.events["admin"] = true;
-		//dataset["participants"] = participants.participants;
-		//console.log(data);
+	handler: async (request,reply) => {
+		let data;
+		try{	
+			const {res,payload} = await Wreck.get('http://10.5.0.7:4477/api/pack97/event/list');
+			const events = JSON.parse(payload);
+			data = {
+				"admin":false,
+				"events":events
+			};
+			
+		}catch(err){
+			console.log("failed" + err);
+		}
+		// let data = {};
+		// data["events"] = events.events;
+		// data.events["admin"] = true;
 		return reply.view('events_home',data);
 	}
 });
@@ -149,10 +148,20 @@ server.route({
 server.route({
 	method:"GET",
 	path:"/leaders",
-	handler: (request,reply) => {
-		const data = {"admin":false};
-		data["leaders"] = leaders.contacts;
-		data["page_title"] = "Leaders";
+	handler: async (request,reply) => {
+		let data;
+		try{	
+			const {res,payload} = await Wreck.get('http://10.5.0.7:4477/api/pack97/leader/list');
+			const leader = JSON.parse(payload);
+			data = {
+				"admin":false,
+				"leaders":leader,
+				"page_title":"Leaders"
+			};
+			
+		}catch(err){
+			console.log("failed" + err);
+		}
 		return reply.view('leaders',data);
 	}
 });
@@ -161,10 +170,20 @@ server.route({
 server.route({
 	method:"GET",
 	path:"/committee",
-	handler: (request,reply) => {
-		const data = {"admin":false};
-		data["leaders"] = committee.contacts;
-		data["page_title"] = "Committee";
+	handler: async (request,reply) => {
+		let data;
+		try{	
+			const {res,payload} = await Wreck.get('http://10.5.0.7:4477/api/pack97/committee/list');
+			const committee = JSON.parse(payload);
+			data = {
+				"admin":false,
+				"leaders":committee,
+				"page_title":"Committee"
+			};
+			
+		}catch(err){
+			console.log("failed" + err);
+		}
 		return reply.view('leaders',data);
 	}
 });
@@ -216,11 +235,22 @@ server.route({
 
 server.route({
 	method:'GET',
-	path:'/events/register/{email}',
+	path:'/events/registration/{event_id}',
 	handler: async (request,reply) => {
+		return reply.view(`events_reg`);
+	}
+});
+
+server.route({
+	method:'POST',
+	path:'/events/registration',
+	handler: async (request,reply) => {
+
 		try{
-			const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/parent/email/${request.params.email}`);
+			const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/contact/email/${request.payload.email}`);
 			const parent = JSON.parse(payload);
+			//if (parent.length)
+			console.log(parent[0]);
 			return reply.view(`events_reg`,parent[0]);
 		}catch(err){
 			console.log("failed" + err);
