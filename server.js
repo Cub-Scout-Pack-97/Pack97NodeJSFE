@@ -126,9 +126,7 @@ server.route({
 		}catch(err){
 			console.log("failed" + err);
 		}
-		// let data = {};
-		// data["events"] = events.events;
-		// data.events["admin"] = true;
+		
 		return reply.view('events_home',data);
 	}
 });
@@ -235,26 +233,70 @@ server.route({
 
 server.route({
 	method:'GET',
+	path:'/events/register/{event_id}',
+	handler: async (request,reply) => {
+		const data = {"path":`/events/registration/${request.params.event_id}`,"event_id":request.params.event_id};
+		return reply.view(`events_reg`,data);
+	}
+});
+
+server.route({
+	method:'GET',
 	path:'/events/registration/{event_id}',
 	handler: async (request,reply) => {
-		return reply.view(`events_reg`);
+		try{
+			const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/contact/email/${request.query.contact_email}`);
+			const contact = JSON.parse(payload);
+			let data = {};
+			data['email'] = request.query.contact_email;
+			data['event_id'] = request.params.event_id;
+			data['contact'] = contact;
+			data['path'] = "/events/register/attendee";
+			
+			return reply.view(`events_reg`,data);
+		}catch(err){
+			console.log("failed" + err);
+		}
 	}
 });
 
 server.route({
 	method:'POST',
-	path:'/events/registration',
+	path:'/events/register/attendee',
 	handler: async (request,reply) => {
+		const wreck = await Wreck.post('http://10.5.0.7:4477/api/pack97/event/add/attendees', { payload: request.payload }, (err, res, payload) => {
+		    console.log(`Error ${err}`)
+		});
+		reply.redirect('/events');
+		return true; 
+		
+	}
+});
 
-		try{
-			const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/contact/email/${request.payload.email}`);
-			const parent = JSON.parse(payload);
-			//if (parent.length)
-			console.log(parent[0]);
-			return reply.view(`events_reg`,parent[0]);
-		}catch(err){
-			console.log("failed" + err);
+server.route({
+	method: 'POST',
+	path: '/events/add/family',
+	handler: async (request,reply) => {
+		const attendee = {"_id":request.payload._id};
+		let family = {
+			"type":request.payload.type,
+			"first_name":request.payload.attendee_first_name,
+			"last_name":request.payload.attendee_last_name,
+			"detail":request.payload.detail
 		}
+		if(request.payload.type === 'scout'){
+			const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/scout/name/${request.payload.attendee_first_name}/${request.payload.attendee_last_name}`);
+			const scout = JSON.parse(payload);
+			family["scout_id"] = scout[0]._id;
+			family["den"] = scout[0].den;
+		}
+
+		attendee["family"] = family;
+		const wreck = await Wreck.post('http://10.5.0.7:4477/api/pack97/contact/add/family', { payload: attendee }, (err, res, payload) => {
+		    console.log(`Error ${err}`)
+		});
+		reply.redirect(`/events/registration/${request.payload.event_id}?contact_email=${request.payload.contact_email}`);
+		return true;
 	}
 });
 

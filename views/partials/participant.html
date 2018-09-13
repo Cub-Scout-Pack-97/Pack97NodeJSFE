@@ -15,20 +15,31 @@
 		</span>
 	</div>
 	<div class="participants_card">
-		<b>Scouts</b>
 			{{#getscouts attendees}}
+				{{#equal @index 1 "Scouts"}}
+					<b>Scouts</b>
+				{{/equal}}
 				{{>participant_info @scout}}
 			{{/getscouts}}
-		<b>Leader</b>
+		
 			{{#getleaders attendees}}
+				{{#equal @index 1 "Leader"}}
+					<b>Leader</b>
+				{{/equal}}
 				{{>participant_info @leader}}
 			{{/getleaders}}
-		<b>Adults</b>
+		
 			{{#getadults attendees}}
+				{{#equal @index 1 "Adults"}}
+					<b>Adults</b>
+				{{/equal}}
 				{{>participant_info @adult}}
 			{{/getadults}}
-		<b>Other</b>
+		
 			{{#getothers attendees}}
+				{{#equal @index 1 "Other"}}
+					<b>Other</b>
+				{{/equal}}
 				{{>participant_info @other}}
 			{{/getothers}}
 	</div>

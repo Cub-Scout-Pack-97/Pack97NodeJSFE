@@ -1,12 +1,33 @@
-<form action="/events/registration" method='POST'>
-	<label for="email">Email</label>
-	<input type="email" name="email" id="email" value='{{email}}'>
-	<input type="input" name="_id" value="{{_id}}" class="hidden">
-	<input type="input" name="first_name" value="{{first_name}}">
-	<input type="input" name="last_name" value="{{last_name}}"> 
-	<input type="input" name="phone" value="{{phone}}">
-	{{#getattendees family}}
-		{{>attendees @attendee}}
-	{{/getattendees}}
-	<input type="submit">
+<form action="{{path}}" method='GET'>
+	{{error}}
+	<div id="email_container" >
+		<input type="email" name="contact_email" id="email" value='{{email}}' placeholder="Your Email">
+	</div>
+	<input type="input" name="event_id" id="event_id" value='{{event_id}}' class="hide">
+	<div id="attendees">
+		{{#each contact}}
+			<div>
+				<input type="input" name="contact_id" value="{{_id}}" class="hide">
+				<input type="input" name="contact_first_name" value="{{first_name}}">
+				<input type="input" name="contact_last_name" value="{{last_name}}"> 
+				<input type="input" name="contact_phone" value="{{phone}}">
+			</div>
+			<div >	
+				{{#getattendees family}}
+					{{>attendees @attendee}}
+				{{/getattendees}}
+			</div>
+		{{/each}}
+		{{#with contact}}
+			<input type="button" id="showNewAttendee" value="Add a new person"  class="btn floatRight">
+		{{/with}}
+	</div>
+	<input type="submit" class="btn horCenter mb20">
+
 </form>
+
+<div id="newAttendee" class="hide">
+	{{>newAttendee}}
+</div>
+<script type="text/javascript" src="/js/events.js"></script>
+<link rel="stylesheet" type="text/css" href="/css/event_reg.css">

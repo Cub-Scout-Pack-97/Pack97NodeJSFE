@@ -1,0 +1,10 @@
+input#email {
+	font-size: 18pt;
+    width: 100%;
+    text-align: center;
+}
+div#email_container{
+	padding-top: 20px;
+	width: 400px;
+	margin: auto;
+}

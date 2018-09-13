@@ -29,7 +29,7 @@
 		</div>	
 		<div class="w100">
 			<input type="button" value="Participants" onclick="showhide('{{_id}}')" class="card_button">
-			<input type="button" value="Register" onclick="Register('{{_id}}'')" class="card_button" disabled="">		
+			<a href='/events/register/{{_id}}' class="card_button" disabled="">Register</a>
 		</div>
 		<div class="participants {{_id}}">
 			{{#each participants}}
