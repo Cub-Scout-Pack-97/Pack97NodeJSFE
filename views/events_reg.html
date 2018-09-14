@@ -8,26 +8,32 @@
 		{{#each contact}}
 			<div>
 				<input type="input" name="contact_id" value="{{_id}}" class="hide">
-				<input type="input" name="contact_first_name" value="{{first_name}}">
-				<input type="input" name="contact_last_name" value="{{last_name}}"> 
-				<input type="input" name="contact_phone" value="{{phone}}">
+				<span class="title">Welcome back</span>
+				<div class="contact_name">
+					<span class="title">{{#titlecase first_name}}{{/titlecase}}</span>
+					<span class="title">{{#titlecase last_name}}{{/titlecase}}</span>
+				</div>
+				<input type="input" name="contact_first_name" value="{{#titlecase first_name}}{{/titlecase}}" class="hide" disabled>
+				<input type="input" name="contact_last_name" value="{{#titlecase last_name}}{{/titlecase}}" class="hide" disabled> 
+				<input type="input" name="contact_phone" value="{{phone}}" class="hide">
 			</div>
 			<div >	
+				<div class="list_title center">Select anyone attending</div>
 				{{#getattendees family}}
 					{{>attendees @attendee}}
 				{{/getattendees}}
 			</div>
 		{{/each}}
-		{{#with contact}}
-			<input type="button" id="showNewAttendee" value="Add a new person"  class="btn floatRight">
-		{{/with}}
 	</div>
-	<input type="submit" class="btn horCenter mb20">
+	<input type="submit" class="btn" id="add_contact">
 
 </form>
 
-<div id="newAttendee" class="hide">
+{{#with contact}}
+	<input type="button" id="showNewAttendee" value="Add a new person"  class="btn horCenter">
+{{/with}}
+<div id="newAttendee" class="modal" style="display:none;">
 	{{>newAttendee}}
 </div>
-<script type="text/javascript" src="/js/events.js"></script>
 <link rel="stylesheet" type="text/css" href="/css/event_reg.css">
+<script type="text/javascript" src="/js/events.js"></script>

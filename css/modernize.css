@@ -137,6 +137,9 @@ h2 {
 .blog{
 	width:100%;
 }
+.center{
+    text-align: center;
+}
 /* Footer */
 footer h3{
 	color:#ffff00;
@@ -269,6 +272,9 @@ p.item84{
 }.mb20{
 	margin-bottom:20px;
     margin-top: 50px;
+}
+.w80{
+    width:80%;
 }
 #wx_module_8643 a{
 	color:#ffff00;

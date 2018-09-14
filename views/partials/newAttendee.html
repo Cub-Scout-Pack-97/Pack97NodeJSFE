@@ -1,18 +1,24 @@
-<form action="/events/add/family" method="POST">
-	<input type="input" name="contact_email" id="email" value='{{email}}' class="hide">
-	<input type="input" name="event_id" id="event_id" value='{{event_id}}' class="hide">
-	<input type="input" name="_id" id="contact_id" value='{{contact.0._id}}' class="hide">
-	<select name="type">
-		<option value="scout">Scout</option>
-		<option value="leader">Leader</option>
-		<option value="adult">Adult</option>
-		<option value="other">Other</option>
-	</select>
-	<input type="input" name="attendee_first_name">
-	<input type="input" name="attendee_last_name">
-	<select name="detail">
-		<option value="male">Male</option>
-		<option value="female">Female</option>
-	</select>
-	<input type="submit">
-</form>
+<div class="modal_content">
+	<div class="modal_title">
+		<span class="close">&times;</span>
+		<h3>Add a new Attendee</h3>
+	</div>
+	<form action="/events/add/family" method="POST">
+		<input type="input" name="contact_email" id="email" value='{{email}}' class="hide">
+		<input type="input" name="event_id" id="event_id" value='{{event_id}}' class="hide">
+		<input type="input" name="_id" id="contact_id" value='{{contact.0._id}}' class="hide">
+		<select name="type" class="new_att">
+			<option value="scout">Scout</option>
+			<option value="leader">Leader</option>
+			<option value="adult">Adult</option>
+			<option value="other">Other</option>
+		</select>
+		<input type="input" name="attendee_first_name" placeholder="First Name" class="new_att">
+		<input type="input" name="attendee_last_name" placeholder="Last Name" class="new_att">
+		<select name="detail" class="new_att">
+			<option value="male">Male</option>
+			<option value="female">Female</option>
+		</select>
+		<input class="btn" type="submit">
+	</form>
+</div>

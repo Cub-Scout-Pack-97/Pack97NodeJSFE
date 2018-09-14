@@ -2,9 +2,82 @@ input#email {
 	font-size: 18pt;
     width: 100%;
     text-align: center;
+    margin-bottom: 20px;
 }
 div#email_container{
 	padding-top: 20px;
 	width: 400px;
 	margin: auto;
+}
+.title{
+	font-size: 1.17em;
+	font-weight: bold;
+	color: #777;
+	margin: 5px;
+}
+.contact_name{
+	margin-left: 10px;
+	margin-bottom: 20px;
+}
+.contact_name .title{
+	margin-right: 0px;
+	color: #000;
+}
+.sub{
+	color: #777;
+	margin-left: 35px;
+	margin-bottom: 10px;
+}
+.list_title{
+	color:#026;
+	font-size: 1.1em;
+	margin-bottom: 15px;
+}
+#showNewAttendee{
+	font-size: .8em;
+}
+#add_contact{
+	font-weight: bold;
+	margin-left: 20px;
+}
+.modal{
+	display: none;
+	position: fixed; /* Stay in place */
+    z-index: 1; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgb(0,0,0); /* Fallback color */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+.modal_content {
+    margin: 15% auto; /* 15% from the top and centered */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+    background-color: #fff;
+}
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.new_att{
+	display: block;
+	width: 300px;
+	font-size: 1.1em;
+	margin-bottom: 20px;
+}
+.modal_title h3 {
+	text-align: center;
+    clear: both;
 }

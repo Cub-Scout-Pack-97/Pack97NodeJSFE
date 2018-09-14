@@ -1,6 +1,6 @@
-var _ = require('lodash'),propercase;
+var _ = require('lodash'),titlecase;
 
-propercase  = function(str, context){
+titlecase  = function(str, context){
 	if(_.isEmpty(context)){
 		return "";
 	}
@@ -11,7 +11,6 @@ propercase  = function(str, context){
 
         let textArray = text.split("");
         let propercaseStr = '';
-        console.log(textArray);
         const first = textArray[0].toUpperCase();
         textArray[0] = first;
         textArray.forEach((value) =>{
@@ -24,4 +23,4 @@ propercase  = function(str, context){
     return accum.trim();
 }
 
-module.exports = propercase;
+module.exports = titlecase;
