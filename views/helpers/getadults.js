@@ -6,9 +6,9 @@ getadults  = function(attendees, context){
 	}
 	var accum = '';
     for(var i = 0; i < attendees.length; i ++){
-        const attendee = JSON.parse(attendees[i].replace(/'/g, '"'));
+        const attendee = JSON.parse(attendees[i]);
     	if(attendee.type.toLowerCase() === "adult"){
-            context.data.adult = {"name":attendee.name,"detail":attendee.detail};
+            context.data.adult = {"first_name":attendee.first_name,"last_name":attendee.last_name,"detail":attendee.detail};
             context.data.index = i;
             accum += context.fn(this);
         }

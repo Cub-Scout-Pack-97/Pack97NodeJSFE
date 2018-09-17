@@ -6,9 +6,10 @@ getscouts  = function(attendees, context){
 	}
 	var accum = '';
     for(var i = 0; i < attendees.length; i ++){
-        const attendee = JSON.parse(attendees[i].replace(/'/g, '"'));
+       // console.log(attendees[i].type);
+        const attendee = JSON.parse(attendees[i]);
     	if(attendee.type.toLowerCase() === "scout"){
-            context.data.scout = {"name":attendee.name,"detail":attendee.detail};
+            context.data.scout = {"first_name":attendee.first_name,"last_name":attendee.last_name,"detail":attendee.detail};
             context.data.index = i;
             accum += context.fn(this);
         }

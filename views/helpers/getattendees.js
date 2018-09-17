@@ -8,6 +8,7 @@ getattendees  = function(family, context){
     for(var i = 0; i < family.length; i ++){
     	
             context.data.attendee = family[i];
+            context.data.attendee.family = JSON.stringify(family[i]);
             context.data.index = i;
             accum += context.fn(this);
         

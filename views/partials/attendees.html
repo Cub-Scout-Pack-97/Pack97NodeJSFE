@@ -1,12 +1,5 @@
 <div class="horCenter w80">
-	<input type="checkbox" name="attendees" id="attendees{{@index}}" value='{
-		"type":"{{type}}",
-		"first_name":"{{first_name}}",
-		"last_name":"{{last_name}}",
-		"detail":"{{detail}}",
-		"_id":"{{_id}}",
-		"den":"{{den}}""
-	}'>
+	<input type="checkbox" name="attendees" id="attendees{{@index}}" value='{{{family}}}'>
 	<label for="attendees{{@index}}">
 		<span class='att first_name '>{{#titlecase first_name}}{{/titlecase}}</span>
 		<span class='att last_name '>{{#lastname last_name}}{{@last_name}}{{/lastname}}</span>

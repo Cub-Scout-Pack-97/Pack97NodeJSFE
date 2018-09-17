@@ -6,7 +6,7 @@
 			<a href="tel:{{contact_phone}}">{{contact_phone}}</a>
 			<a href="{{contact_email}}">email</a>
 		</div>
-		<span class="pointer" onclick="TogglePaid(2414, 1)">
+		<span class="pointer" >
 			{{#if verified}}
 				Verified
 			{{else}}
@@ -16,30 +16,30 @@
 	</div>
 	<div class="participants_card">
 			{{#getscouts attendees}}
-				{{#equal @index 1 "Scouts"}}
+				{{#with @scout}}
 					<b>Scouts</b>
-				{{/equal}}
+				{{/with}}
 				{{>participant_info @scout}}
 			{{/getscouts}}
 		
 			{{#getleaders attendees}}
-				{{#equal @index 1 "Leader"}}
+				{{#with @leader}}
 					<b>Leader</b>
-				{{/equal}}
+				{{/with}}
 				{{>participant_info @leader}}
 			{{/getleaders}}
 		
 			{{#getadults attendees}}
-				{{#equal @index 1 "Adults"}}
+				{{#with @adult}}
 					<b>Adults</b>
-				{{/equal}}
+				{{/with}}
 				{{>participant_info @adult}}
 			{{/getadults}}
 		
 			{{#getothers attendees}}
-				{{#equal @index 1 "Other"}}
+				{{#with @other}}
 					<b>Other</b>
-				{{/equal}}
+				{{/with}}
 				{{>participant_info @other}}
 			{{/getothers}}
 	</div>

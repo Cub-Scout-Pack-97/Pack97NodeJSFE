@@ -1,4 +1,4 @@
-<form action="{{path}}" method='GET'>
+<form action="{{path}}" method='{{method}}'>
 	{{error}}
 	<div id="email_container" >
 		<input type="email" name="contact_email" id="email" value='{{email}}' placeholder="Your Email">
@@ -13,8 +13,8 @@
 					<span class="title">{{#titlecase first_name}}{{/titlecase}}</span>
 					<span class="title">{{#titlecase last_name}}{{/titlecase}}</span>
 				</div>
-				<input type="input" name="contact_first_name" value="{{#titlecase first_name}}{{/titlecase}}" class="hide" disabled>
-				<input type="input" name="contact_last_name" value="{{#titlecase last_name}}{{/titlecase}}" class="hide" disabled> 
+				<input type="input" name="contact_first_name" value="{{#titlecase first_name}}{{/titlecase}}" class="hide" >
+				<input type="input" name="contact_last_name" value="{{#titlecase last_name}}{{/titlecase}}" class="hide" > 
 				<input type="input" name="contact_phone" value="{{phone}}" class="hide">
 			</div>
 			<div >	

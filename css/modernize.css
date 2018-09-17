@@ -35,6 +35,9 @@ tr.sectiontableentry1 {
     padding: 5px;
 }
 
+.inline_block{
+    display: inline-block;
+}
 /* Program Page */
 .doc_width{
     text-align: left;

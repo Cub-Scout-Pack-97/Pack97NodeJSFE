@@ -1,7 +1,7 @@
 var _ = require('lodash'),titlecase;
 
 titlecase  = function(str, context){
-	if(_.isEmpty(context)){
+	if(_.isEmpty(context) || str === undefined || str === ''){
 		return "";
 	}
 	var accum = '';

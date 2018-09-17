@@ -235,7 +235,11 @@ server.route({
 	method:'GET',
 	path:'/events/register/{event_id}',
 	handler: async (request,reply) => {
-		const data = {"path":`/events/registration/${request.params.event_id}`,"event_id":request.params.event_id};
+		const data = {
+			"path":`/events/registration/${request.params.event_id}`,
+			"method":"GET",
+			"event_id":request.params.event_id
+		};
 		return reply.view(`events_reg`,data);
 	}
 });
@@ -252,6 +256,7 @@ server.route({
 			data['event_id'] = request.params.event_id;
 			data['contact'] = contact;
 			data['path'] = "/events/register/attendee";
+			data['method'] = "POST";
 			
 			return reply.view(`events_reg`,data);
 		}catch(err){
@@ -264,6 +269,7 @@ server.route({
 	method:'POST',
 	path:'/events/register/attendee',
 	handler: async (request,reply) => {
+		//console.log(request.payload);
 		const wreck = await Wreck.post('http://10.5.0.7:4477/api/pack97/event/add/attendees', { payload: request.payload }, (err, res, payload) => {
 		    console.log(`Error ${err}`)
 		});
