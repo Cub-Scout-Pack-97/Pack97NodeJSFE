@@ -1,4 +1,4 @@
-<div class="card_container">	
+<div class="card_container" id="{{_id}}">	
 	<div class="card_date">
 		{{event_date}}
 		<div class="reg_close_date">
@@ -32,6 +32,11 @@
 			<a href='/events/register/{{_id}}' class="card_button" disabled="">Register</a>
 		</div>
 		<div class="participants {{_id}}">
+			<div>
+				{{#with location}}
+					<a href="{{location}}" class="btn">Google Map</a>
+				{{/with}}
+			</div>
 			{{#each participants}}
 				{{>participant this}}
 			{{/each}}

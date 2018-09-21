@@ -1,0 +1,29 @@
+<a href="/events/admin/event" class="btn">New Event</a>
+<input type="button" id="sortdate" class="btn" value="Sort by Date">
+<input type="button" id="sortname" class="btn" value="Sort by Name">
+{{#each events}}
+	<div>
+		<div>
+			<a href="events#{{_id}}">{{event_name}}</a>
+		</div>
+		<div>
+			<label>Event Date: </label><span>{{event_date}}</span>
+			<label>Registration Closing: </label><span>{{reg_close}}</span>
+		</div>
+		<div>
+			<input type="button" class="btn" value="metrics" onclick="showhide('#metrics_{{_id}}')">
+			<a href="/events/admin/event/{{_id}}" class="btn">Edit</a>
+		</div>
+		<div id="metrics_{{_id}}" class="hide">
+			{{#eventmetrics participants}}
+				<div>Scouts: {{@scouts}}</div>
+				<div>Leaders: {{@leaders}}</div>
+				<div>Adults: {{@adults}}</div>
+				<div>Children: {{@other}}</div>
+				<div>Males: {{@males}}</div>
+				<div>Females: {{@females}}</div>
+			{{/eventmetrics}}
+		</div>	
+	</div>
+{{/each}}
+<script type="text/javascript" src="/js/events.js"></script>
