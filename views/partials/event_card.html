@@ -1,40 +1,50 @@
-<div class="card_container" id="{{_id}}">	
-	<div class="card_date">
-		{{event_date}}
-		<div class="reg_close_date">
-			{{reg_close}}
-		</div>
-	</div>
-	<div class="card_info">
-		<h4>{{event_name}}</h4>
-		<div class="grid66 floatLeft">
-			<p>{{desc}}</p>
-			<div id="event_lead" class="center m50">
-			<label>Event Lead: </label>
-				<a href="mailto:{{lead_email}}" class="bold" target="_blank">{{lead}}</a>
+{{#if visible}}
+	<div class="card_container" id="{{_id}}">	
+		<div class="card_date">
+			{{event_date}}
+			<div class="reg_close_date">
+				{{reg_close}}
 			</div>
 		</div>
-		
-		<div class="center grid33 floatRight mar_top10">
-			<div>Online Payment:</div>
-			
-			<a href="{{payment}}" target="_blank">
-				<img src="http://www.cubscoutpack97.org/images/square_logo.png" width="150" height="100">
-			</a>
-			<!-- <p id="note">Note: that you may not see your registration confirmed below if payment has not been verified.</p> -->
-			{{admin}}
-			{{#if admin}}
-				<input type="button" class="btn" id="btnEmailParticipants" value="Email Participant List" onclick="EmailParticipantList()">
+		<div class="card_info">
+			<h4>{{event_name}}</h4>
+			{{#if payment}}
+				<div class="grid66 floatLeft">
+			{{else}}
+				<div>
 			{{/if}}
-		</div>	
-		<div class="w100 inline_block">
-			<input type="button" value="Participants" onclick="showhide('{{_id}}')" class="card_button">
-			<a href='/events/register/{{_id}}' class="card_button" disabled="">Register</a>
+				<p>{{desc}}</p>
+				<div id="event_lead" class="center m50">
+				<label>Event Lead: </label>
+					<a href="mailto:{{lead_email}}" class="bold" target="_blank">{{lead}}</a>
+				</div>
+			</div>
+			{{#with payment}}
+				<div class="center grid33 floatRight mar_top10">
+						<label>Online Payment</label>
+						<a href="{{@this}}" target="_blank">
+							<img src="http://www.cubscoutpack97.org/images/square_logo.png" class="payment" width="150" height="100">
+						</a>
+					<!-- <p id="note">Note: that you may not see your registration confirmed below if payment has not been verified.</p> -->
+					{{admin}}
+					{{#if admin}}
+						<input type="button" class="btn" id="btnEmailParticipants" value="Email Participant List" onclick="EmailParticipantList()">
+					{{/if}}
+				</div>
+			{{/with}}	
+			<div class="w100 inline_block mb20">
+				<span type="button" class="card_button">Participants</span>
+				{{#if enabled}}
+					<a href='/events/register/{{_id}}' class="card_button">Register</a>
+				{{else}}
+					<span class="reg_close_date">Closed</span>
+				{{/if}}
+			</div>
 		</div>
-		<div class="participants {{_id}}">
+		<div class="participants">
 			<div>
 				{{#with location}}
-					<a href="{{location}}" class="btn">Google Map</a>
+					<a href="{{@this}}" class="btn">Google Map</a>
 				{{/with}}
 			</div>
 			{{#each participants}}
@@ -42,13 +52,4 @@
 			{{/each}}
 		</div>
 	</div>
-</div>
-<script type="text/javascript">
-	function showhide(classname){
-		if($('.' + classname + ':visible').length == 0){
-			$("." + classname).show();
-		}else{
-			$("." + classname).hide();
-		}
-	}
-</script>
+{{/if}}

@@ -38,8 +38,14 @@ server.route({
 	handler: async (request,reply) => {
 		let data;
 		try{	
-			const {res,payload} = await Wreck.get('http://10.5.0.7:4477/api/pack97/event/list');
+			const {res,payload} = await Wreck.get('http://10.5.0.7:4477/api/pack97/event/list/event_date/1');
 			const events = JSON.parse(payload);
+			for(var i=0;i < events.length;i++){
+				if(events[i].location !== undefined){
+					console.log(events[i].location);
+					events[i].location = locationHREF(events[i].location);
+				}
+			};
 			data = {
 				"admin":false,
 				"events":events
@@ -157,29 +163,38 @@ server.route({
 	method:'GET',
 	path:'/events/register/{event_id}',
 	handler: async (request,reply) => {
+		const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/event/${request.params.event_id}`);
+		const event = JSON.parse(payload);
+		let costs = {};
+		costs['scout'] = event.cost_scout.$numberDecimal;
+		costs['leader'] = event.cost_leader.$numberDecimal;
+		costs['adult'] = event.cost_adult.$numberDecimal;
+		costs['other'] = event.cost_other.$numberDecimal;
 		const data = {
-			"path":`/events/registration/${request.params.event_id}`,
-			"method":"GET",
-			"event_id":request.params.event_id
+			"path":`/events/registration`,
+			"method":"POST",
+			"event_id":request.params.event_id,
+			"email":request.params.email,
+			"costs":JSON.stringify(costs)
 		};
 		return reply.view(`events_reg`,data);
 	}
 });
 
 server.route({
-	method:'GET',
-	path:'/events/registration/{event_id}',
+	method:'POST',
+	path:'/events/registration',
 	handler: async (request,reply) => {
 		try{
-			const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/contact/email/${request.query.contact_email}`);
+			const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/contact/email/${request.payload.contact_email}`);
 			const contact = JSON.parse(payload);
 			let data = {};
+			contact[0].family['costs'] = request.payload.costs;
 			data['email'] = request.query.contact_email;
 			data['event_id'] = request.params.event_id;
 			data['contact'] = contact;
 			data['path'] = "/events/register/attendee";
 			data['method'] = "POST";
-			
 			return reply.view(`events_reg`,data);
 		}catch(err){
 			console.log("failed" + err);
@@ -310,4 +325,9 @@ function checkToBoolean(checkbox){
 		bool = true;
 	}
 	return bool;
+}
+function locationHREF(location){
+	let address = location.replace(/ /g,"+");
+	address = address.replace(/,/g,"%2C");
+	return'href',"https://www.google.com/maps/embed/?api=1&query=" + address;
 }

@@ -4,6 +4,7 @@
 		<input type="email" name="contact_email" id="email" value='{{email}}' placeholder="Your Email">
 	</div>
 	<input type="input" name="event_id" id="event_id" value='{{event_id}}' class="hide">
+	<input type="input" name="costs" value="{{costs}}" class="hide">
 	<div id="attendees">
 		{{#each contact}}
 			<div>
@@ -24,6 +25,10 @@
 				{{/getattendees}}
 			</div>
 		{{/each}}
+	</div>
+	<div id="total_container" class="hide">
+		<h3>Total</h3>
+		<span id="total"></span>
 	</div>
 	<input type="submit" class="btn" id="add_contact">
 
