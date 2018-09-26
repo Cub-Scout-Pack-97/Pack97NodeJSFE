@@ -143,6 +143,15 @@ h2 {
 .center{
     text-align: center;
 }
+.ml15{
+    margin-left: 15px;
+}
+.mt15{
+    margin-top: 15px;
+}
+.font1_5{
+    font-size: 1.5em;
+}
 /* Footer */
 footer h3{
 	color:#ffff00;
@@ -285,6 +294,9 @@ p.item84{
 li, .item84{
 	cursor: pointer;
 }
+.pointer{
+    cursor: pointer;
+}
 .imgHeader{
     background-image: url(/images/NewHeaderBlue8.gif);
     background-position: left;
@@ -303,10 +315,6 @@ li, .item84{
 }
 a.font_larger {
     display: table-row;
-}
-p.font_larger {
-    display: table-cell;
-    vertical-align: middle;
 }
 .logo{
 	height:150px;
@@ -353,6 +361,9 @@ div#seasonal {
 }
 .hide{
     display: none;
+}
+.block{
+    display: block;
 }
 @media only screen and (max-width: 945px) {
  	.footer_grid33{

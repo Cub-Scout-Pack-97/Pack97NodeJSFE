@@ -24,9 +24,11 @@ server.connection({ port: 3003, host: '0.0.0.0' });
 server.route({
 	method:"GET",
 	path:"/",
-	handler: (request,reply) => {
+	handler: async (request,reply) => {
+		const {res,payload} = await Wreck.get('http://10.5.0.7:4477/api/pack97/event/list/event_date/1');
+		const events = JSON.parse(payload);
 		const data = {"admin":false};
-		data["events"] = events.events;
+		data["events"] = events;
 		return reply.view('homepage',data);
 	}
 });
@@ -42,7 +44,6 @@ server.route({
 			const events = JSON.parse(payload);
 			for(var i=0;i < events.length;i++){
 				if(events[i].location !== undefined){
-					console.log(events[i].location);
 					events[i].location = locationHREF(events[i].location);
 				}
 			};
@@ -123,6 +124,14 @@ server.route({
 	}
 });
 
+server.route({
+	method:'GET',
+	path:'/images/events/{images}',
+	handler:(request,reply)=>{
+		return reply.file(`./images/events/${request.params.images}`);
+	}
+});
+
 //route to css
 server.route({
 	method:'GET',
@@ -170,11 +179,16 @@ server.route({
 		costs['leader'] = event.cost_leader.$numberDecimal;
 		costs['adult'] = event.cost_adult.$numberDecimal;
 		costs['other'] = event.cost_other.$numberDecimal;
+		costs['min'] = event.child_age_min;
+		costs['max'] = event.child_age_max;
+		costs['other2'] = event.cost_other2.$numberDecimal;
+		costs['min2'] = event.child_age_min2;
+		costs['max2'] = event.child_age_max2;
 		const data = {
 			"path":`/events/registration`,
 			"method":"POST",
 			"event_id":request.params.event_id,
-			"email":request.params.email,
+			"payment":JSON.stringify(event.payment),
 			"costs":JSON.stringify(costs)
 		};
 		return reply.view(`events_reg`,data);
@@ -190,11 +204,12 @@ server.route({
 			const contact = JSON.parse(payload);
 			let data = {};
 			contact[0].family['costs'] = request.payload.costs;
-			data['email'] = request.query.contact_email;
-			data['event_id'] = request.params.event_id;
+			data['email'] = request.payload.contact_email;
+			data['event_id'] = request.payload.event_id;
 			data['contact'] = contact;
 			data['path'] = "/events/register/attendee";
 			data['method'] = "POST";
+			data['payment'] = request.payload.payment;
 			return reply.view(`events_reg`,data);
 		}catch(err){
 			console.log("failed" + err);
@@ -239,6 +254,7 @@ server.route({
 	path: '/events/add/family',
 	handler: async (request,reply) => {
 		const attendee = {"_id":request.payload._id};
+
 		let family = {
 			"type":request.payload.type,
 			"first_name":request.payload.attendee_first_name,
@@ -248,15 +264,23 @@ server.route({
 		if(request.payload.type === 'scout'){
 			const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/scout/name/${request.payload.attendee_first_name}/${request.payload.attendee_last_name}`);
 			const scout = JSON.parse(payload);
-			family["scout_id"] = scout[0]._id;
-			family["den"] = scout[0].den;
+			if(scout.length > 0){	
+				family["scout_id"] = scout[0]._id;
+				family["den"] = scout[0].den;
+				family["rank"] = scout[0].rank;
+			}else{
+				request.payload.error = `We were unable to find ${request.payload.attendee_first_name} ${request.payload.attendee_last_name} as scout in our system. If this continues please notify the <a href="mailto://webmaster@cunscoutpack97.org">Webmaster</a>`
+				request.payload.path = "/events/registration";
+				request.payload.method= "POST";
+				return reply.view("events_reg",request.payload);
+			}
 		}
 
 		attendee["family"] = family;
 		const wreck = await Wreck.post('http://10.5.0.7:4477/api/pack97/contact/add/family', { payload: attendee }, (err, res, payload) => {
 		    console.log(`Error ${err}`)
 		});
-		reply.redirect(`/events/registration/${request.payload.event_id}?contact_email=${request.payload.contact_email}`);
+		reply.redirect(`/events/register/${request.payload.event_id}`);
 		return true;
 	}
 });
@@ -303,7 +327,6 @@ server.route({
 		payload.lead_notify = checkToBoolean(request.payload.lead_notify);
 		payload.backpacking = checkToBoolean(request.payload.backpacking);
 		payload.tshirt = checkToBoolean(request.payload.tshirt);
-		console.log("front end \n" + JSON.stringify(payload) + "\n\n\n");
 		const wreck = await Wreck.post('http://10.5.0.7:4477/api/pack97/event/update', { payload: payload }, (err, res, payload) => {
 		    console.log(`Error ${err}`)
 		});
@@ -316,7 +339,7 @@ server.start((err) => {
     if (err) {
         throw err;
     }
-    console.log(`Server running at: ${server.info.uri}/`);
+    console.log(`${new Date()} Server running at: ${server.info.uri}/`);
 });
 
 function checkToBoolean(checkbox){

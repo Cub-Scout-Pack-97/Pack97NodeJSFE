@@ -1,151 +1,192 @@
-
+<link rel="stylesheet" type="text/css" href="/slick/slick.css">
+<link rel="stylesheet" type="text/css" href="/slick/slick-theme.css">
+<link rel="stylesheet" type="text/css" href="/css/event_reg.css">
 <form action="{{path}}" method="POST">
 	<h3>Event Info</h3>
 	<div class="event_sections">
 		{{#with _id}}
 			<input type="text" name="event_id" value="{{@this}}" class="hide">
 		{{/with}}
+		<div class="input_grid">
+			<label for="event_name">Event Name</label>
+			<input type="input" name="event_name" id="event_name" value="{{event_name}}" placeholder="Name your event" required>
+		</div>
+		<div class="input_grid">
+			<label for="desc">Description</label>
+			<textarea rows="2" cols="77" name="desc" id="desc" placeholder="Enter a detailed discription of your event"  required>{{desc}}</textarea>
+		</div>
+		<div class="events_dates">
+			<span class="dates_grid">
+				<label for="event_date">Event Date</label>
+				<input type="date" name="event_date" id="event_date" value="{{event_date}}" placeholder="Date of the event" required>
+			</span>
+			<span class="dates_grid">
+				<label for="event_time">Event Start Time</label>
+				<input type="time" name="event_time" id="event_time" value="{{event_time}}" placeholder="Start time of the event" required>
+			</span>
+			<span class="dates_grid">
+				<label for="reg_close" required>Registration Closed Date</label>
+				<input type="date" name="reg_close" id="reg_close" value="{{reg_close}}">
+			</span>
+		</div>
+		<div class="events_dates">
+			<span class="grid50">
+				<label for="enabled">Registration is Open</label>
+				{{#unless _id}}
+					<input type="checkbox" name="enabled" id="enabled" checked>
+				{{else}}
+					{{#if enabled}}
+						<input type="checkbox" name="enabled" id="enabled" checked>
+					{{else}}
+						<input type="checkbox" name="enabled" id="enabled">
+					{{/if}}
+				{{/unless}}
+			</span>
+			<span class="grid50">
+				<label for="visible">Registration is Visible</label>
+				{{#unless _id}}
+					<input type="checkbox" name="visible" id="visible" checked>
+				{{else}}
+					{{#if visible}}
+						<input type="checkbox" name="visible" id="visible" checked>
+					{{else}}
+						<input type="checkbox" name="visible" id="visible">
+					{{/if}}
+				{{/unless}}
+			</span>
+		</div>
 
-		<label for="event_name">Event Name</label>
-		<input type="input" name="event_name" id="event_name" value="{{event_name}}" placeholder="Name your event" required>
-
-		<label for="event_date">Event Date</label>
-		<input type="date" name="event_date" id="event_date" value="{{event_date}}" placeholder="Date of the event" required>
-
-		<label for="event_time">Event Start Time:</label>
-		<input type="time" name="event_time" id="event_time" value="{{event_time}}" placeholder="Start time of the event" required>
-
-		<label for="desc">Description:</label>
-		<textarea rows="4" cols="25" name="desc" id="desc" placeholder="Enter a detailed discription of your event"  required>{{desc}}</textarea>
-
-		<label for="location">Location</label>
-		<input type="text" name="location" id="location" value="{{location}}">	
-
-		<label for="reg_close" required>Registration Closed Date</label>
-		<input type="date" name="reg_close" id="reg_close" value="{{reg_close}}">
-
-		<label for="enabled">Registration is Open</label>
-		{{#unless _id}}
-			<input type="checkbox" name="enabled" id="enabled" checked>
-		{{else}}
-			{{#if enabled}}
-				<input type="checkbox" name="enabled" id="enabled" checked>
-			{{else}}
-				<input type="checkbox" name="enabled" id="enabled">
-			{{/if}}
-		{{/unless}}
-
-		<label for="visible">Registration is Visible</label>
-		{{#unless _id}}
-			<input type="checkbox" name="visible" id="visible" checked>
-		{{else}}
-			{{#if visible}}
-				<input type="checkbox" name="visible" id="visible" checked>
-			{{else}}
-				<input type="checkbox" name="visible" id="visible">
-			{{/if}}
-		{{/unless}}
-		
+		<div class="input_grid clearBoth">
+			<label for="location">Location</label>
+			<input type="text" name="location" id="location" value="{{location}}">	
+		</div>
+		<div name="image" id="event_image" class="input_grid">
+			{{#geteventimages}}
+				<div><img class="event_image_src" src="{{@path}}"></div>
+			{{/geteventimages}}
+		</div>
+		<input type="input" name="select_image" id="select_image" class="hide">
+		<div class="events_dates">
+			<span class="grid50">
+				<label for="backpacking">Will we be backpacking</label>
+				{{#if backpacking}}
+					<input type="checkbox" name="backpacking" id="backpacking" checked>
+				{{else}}
+					<input type="checkbox" name="backpacking" id="backpacking">
+				{{/if}}
+			</span>
+			<span class="grid50">
+				<label for="tshirt">Include T-Shirt size</label>
+				{{#if tshirt}}
+					<input type="checkbox" name="tshirt" id="tshirt" checked>
+				{{else}}
+					<input type="checkbox" name="tshirt" id="tshirt">
+				{{/if}}
+			</span>
+		</div>
 	</div>
 	<h3>Leader Info</h3>
 	<div class="event_sections">
-		<label for="lead_name">Lead Name</label>
-		<input type="text" name="lead" id="lead_name" value="{{lead}}" placeholder="Who is the Event Leader">
-
-		<label for="lead_email">Lead Email</label>
-		<input type="email" name="lead_email" id="lead_email" value="{{lead_email}}"></td>
-			
-		<label for="lead_notify">Notify Event Lead on new registrations</label>
-		{{#if lead_notify}}
-			<input type="checkbox" name="lead_notify" id="lead_notify" checked>
-		{{else}}
-			<input type="checkbox" name="lead_notify" id="lead_notify">
-		{{/if}}
-		
+		<div class="input_grid">
+			<label for="lead_name">Lead Name</label>
+			<input type="text" name="lead" id="lead_name" value="{{lead}}" placeholder="Who is the Event Leader">
+		</div>
+		<div class="input_grid">
+			<label for="lead_email">Lead Email</label>
+			<input type="email" name="lead_email" id="lead_email" value="{{lead_email}}"></td>
+		</div>
+		<div class="input_grid">	
+			<label for="lead_notify">Notify Event Lead on new registrations</label>
+			{{#if lead_notify}}
+				<input type="checkbox" name="lead_notify" id="lead_notify" checked>
+			{{else}}
+				<input type="checkbox" name="lead_notify" id="lead_notify">
+			{{/if}}
+		</div>
 	</div>
 	<h3>Costs</h3>
 	<div class="event_sections">
-		<label for="cost_scout">Scout</label>
-		{{#if cost_scout}}
-			<input type="number" min="0" step="0.01" name="cost_scout" id="cost_scout" value="{{cost_scout.$numberDecimal}}" required>
-		{{else}}
-			<input type="number" min="0" step="0.01" name="cost_scout" id="cost_scout" value="0.00" required>
-		{{/if}}
-			
-		<label for="cost_leader">Leader</label>
-		{{#if cost_leader}}
-			<input type="number" min="0" step="0.01" name="cost_leader" id="cost_leader" value="{{cost_leader.$numberDecimal}}" required>
-		{{else}}
-			<input type="number" min="0" step="0.01" name="cost_leader" id="cost_leader" value="0.00" required>
-		{{/if}}
-			
-		<label for="cost_adult">Adult</label>
-		{{#if cost_adult}}
-			<input type="number" min="0" step="0.01" name="cost_adult" id="cost_adult" value="{{cost_adult.$numberDecimal}}" required>
-		{{else}}
-			<input type="number" min="0" step="0.01" name="cost_adult" id="cost_adult" value="0.00" required>
-		{{/if}}
-		
-		<label for="cost_other">Children:</label>
-		{{#if cost_other}}
-			<input type="number" min="0" step="0.01" name="cost_other" id="cost_other" value="{{cost_other.$numberDecimal}}" required>
-		{{else}}
-			<input type="number" min="0" step="0.01" name="cost_other" id="cost_other" value="0.00" required>
-		{{/if}}
-			
-		<label for="child_age_min">Child Age Range</label>
-		{{#if child_age_min}}
-			<input type="number" min="1" max="18" step="1" name="child_age_min" id="child_age_min" value="{{child_age_min}}" placeholder="min">
-		{{else}}
-			<input type="number" min="1" max="18" step="1" name="child_age_min" id="child_age_min" placeholder="min">
-		{{/if}}
-		{{#if child_age_min}}
-			<input type="number" min="1" max="18" step="1" name="child_age_max" id="child_age_max" value="{{child_age_max}}" placeholder="max">
-		{{else}}
-			<input type="number" min="1" max="18" step="1" name="child_age_max" id="child_age_max" placeholder="max">
-		{{/if}}
+		<div class="input_grid">
+			<label for="online_sales">Online Sale URL</label>
+			<input type="text" name="online_sales" id="online_sales" value="{{online_sales}}" >
+		</div>
+		<div class="events_dates">
+			<span class="grid25">
+				<label for="cost_scout">Scout</label>
+				{{#if cost_scout}}
+					<input type="number" min="0" step="0.01" name="cost_scout" id="cost_scout" value="{{cost_scout.$numberDecimal}}" required>
+				{{else}}
+					<input type="number" min="0" step="0.01" name="cost_scout" id="cost_scout" value="0.00" required>
+				{{/if}}
+			</span>
+			<span class="grid25">
+				<label for="cost_leader">Leader</label>
+				{{#if cost_leader}}
+					<input type="number" min="0" step="0.01" name="cost_leader" id="cost_leader" value="{{cost_leader.$numberDecimal}}" required>
+				{{else}}
+					<input type="number" min="0" step="0.01" name="cost_leader" id="cost_leader" value="0.00" required>
+				{{/if}}
+			</span>
+			<span class="grid25">
+				<label for="cost_adult">Adult</label>
+				{{#if cost_adult}}
+					<input type="number" min="0" step="0.01" name="cost_adult" id="cost_adult" value="{{cost_adult.$numberDecimal}}" required>
+				{{else}}
+					<input type="number" min="0" step="0.01" name="cost_adult" id="cost_adult" value="0.00" required>
+				{{/if}}
+			</span>
+			<span class="grid25">
+				<label for="cost_other">Children</label>
+				{{#if cost_other}}
+					<input type="number" min="0" step="0.01" name="cost_other" id="cost_other" value="{{cost_other.$numberDecimal}}" required>
+				{{else}}
+					<input type="number" min="0" step="0.01" name="cost_other" id="cost_other" value="0.00" required>
+				{{/if}}
+			</span>
+		</div>
+		<div class="events_dates">
+			<label for="child_age_min">Child Age Range</label>
+			{{#if child_age_min}}
+				<input type="number" min="1" max="18" step="1" name="child_age_min" id="child_age_min" value="{{child_age_min}}" placeholder="min">
+			{{else}}
+				<input type="number" min="1" max="18" step="1" name="child_age_min" id="child_age_min" placeholder="min">
+			{{/if}}
+			{{#if child_age_min}}
+				<input type="number" min="1" max="18" step="1" name="child_age_max" id="child_age_max" value="{{child_age_max}}" placeholder="max">
+			{{else}}
+				<input type="number" min="1" max="18" step="1" name="child_age_max" id="child_age_max" placeholder="max">
+			{{/if}}
+		</div>
 			
 		<input type="button" id="second_child_range" class="btn" value="Add Second Child Range">
 		<div id="other_child_range" class="hide">
-			<label for="cost_other2">2nd Children</label>
-			{{#if cost_other2}}
-				<input type="number" min="0" step="0.01" name="cost_other2" id="cost_other2" value="{{cost_other2.$numberDecimal}}" required>
-			{{else}}
-				<input type="number" min="0" step="0.01" name="cost_other2" id="cost_other2" value="0.00">
-			{{/if}}
-			
-			<label>2nd Child Age Range:</label>
-			{{#if child_age_min}}
-				<input type="number" min="1" max="18" step="1" name="child_age_min2" id="child_age_min2" value="{{child_age_min}}" placeholder="min">
-			{{else}}
-				<input type="number" min="1" max="18" step="1" name="child_age_min2" id="child_age_min2" placeholder="min">
-			{{/if}}
-			{{#if child_age_min}}
-				<input type="number" min="1" max="18" step="1" name="child_age_max2" id="child_age_max2" value="{{child_age_max}}" placeholder="max">
-			{{else}}
-				<input type="number" min="1" max="18" step="1" name="child_age_max2" id="child_age_max2" placeholder="max">
-			{{/if}}
+			<div class="events_dates">
+				<span class="grid25">
+					<label for="cost_other2">2nd Children</label>
+					{{#if cost_other2}}
+						<input type="number" min="0" step="0.01" name="cost_other2" id="cost_other2" value="{{cost_other2.$numberDecimal}}" required>
+					{{else}}
+						<input type="number" min="0" step="0.01" name="cost_other2" id="cost_other2" value="0.00">
+					{{/if}}
+				</span>
+			</div>
+			<div class="events_dates">
+				<label>2nd Child Age Range</label>
+				{{#if child_age_min}}
+					<input type="number" min="1" max="18" step="1" name="child_age_min2" id="child_age_min2" value="{{child_age_min}}" placeholder="min">
+				{{else}}
+					<input type="number" min="1" max="18" step="1" name="child_age_min2" id="child_age_min2" placeholder="min">
+				{{/if}}
+				{{#if child_age_min}}
+					<input type="number" min="1" max="18" step="1" name="child_age_max2" id="child_age_max2" value="{{child_age_max}}" placeholder="max">
+				{{else}}
+					<input type="number" min="1" max="18" step="1" name="child_age_max2" id="child_age_max2" placeholder="max">
+				{{/if}}
+			</div>
 		</div>
-
-		<label for="online_sales">Online Sale URL</label>
-		<input type="text" name="online_sales" id="online_sales" value="{{online_sales}}" >
-			
-		<label for="backpacking">Will we be backpacking</label>
-		{{#if backpacking}}
-			<input type="checkbox" name="backpacking" id="backpacking" checked>
-		{{else}}
-			<input type="checkbox" name="backpacking" id="backpacking">
-		{{/if}}
-		
-		<label for="tshirt">Include T-Shirt size</label>
-		{{#if tshirt}}
-			<input type="checkbox" name="tshirt" id="tshirt" checked>
-		{{else}}
-			<input type="checkbox" name="tshirt" id="tshirt">
-		{{/if}}
-		
 	</div>
 
 	<input type="submit" class="btn">
 </form>
+<script type="text/javascript" src="/slick/slick.min.js"></script>
 <script type="text/javascript" src="/js/events.js"></script>

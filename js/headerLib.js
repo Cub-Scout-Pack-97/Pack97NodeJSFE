@@ -65,6 +65,3 @@ $(window).scroll(function () {
     }
     iScrollPos = iCurScrollPos;
 });
-
-
-

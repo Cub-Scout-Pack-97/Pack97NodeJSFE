@@ -9,19 +9,44 @@ div#email_container{
 	width: 400px;
 	margin: auto;
 }
+#contact_name{
+	width:400px;
+	text-align: center;
+}
 .title{
 	font-size: 1.17em;
 	font-weight: bold;
 	color: #777;
 	margin: 5px;
 }
+.att.main{
+	font-size: 1.25em;
+}
+img.event_image_src {
+    width: 100%;
+}
+.att.last_name, .sub .att {
+    margin-right: 10px;
+    text-transform: capitalize;
+}
 .contact_name{
-	margin-left: 10px;
 	margin-bottom: 20px;
+}
+#add_contact_parent{
+	line-height: 30px;
 }
 .contact_name .title{
 	margin-right: 0px;
 	color: #000;
+}
+#showNewAttendee{
+    margin-left: 80px;
+    margin-top: 30px;
+}
+#attendees{
+    width: 60%;
+    min-width: 600px;
+    margin: auto;
 }
 .sub{
 	color: #777;
@@ -33,12 +58,12 @@ div#email_container{
 	font-size: 1.1em;
 	margin-bottom: 15px;
 }
-#showNewAttendee{
-	font-size: .8em;
-}
 #add_contact{
 	font-weight: bold;
-	margin-left: 20px;
+}
+.error,.error a{
+    text-align: center;
+    color: red;
 }
 .modal{
 	display: none;
@@ -72,12 +97,58 @@ div#email_container{
     cursor: pointer;
 }
 .new_att{
-	display: block;
-	width: 300px;
+	width: 100%;
+    max-width: 600px;
+    margin: auto;
 	font-size: 1.1em;
 	margin-bottom: 20px;
 }
 .modal_title h3 {
 	text-align: center;
     clear: both;
+}
+.event_sections>div label {
+    color: #555;
+}
+.event_image_src{
+	width:100%;
+}
+.event_sections>div input, .event_sections>div textarea {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+}
+.events_dates {
+    width: 80%;
+    min-width: 300px;
+    margin: auto;
+}
+.grid25 input {
+    width: 80px;
+}
+
+.grid25 {
+    width: 24%;
+    display: inline-grid;
+}
+input#child_age_min, input#child_age_max, input#child_age_min2, input#child_age_max2{
+    width: 50px;
+}
+.grid50 input {
+    margin-right: 12%;
+}
+.grid50 label {
+    margin-left: 12%;
+}
+.event_sections div{
+	margin-bottom: 15px;
+}
+.dates_grid {
+    width: 32%;
+    display: inline-block;
+}
+.input_grid{
+	display: grid;
+	min-width:300px;
+	margin:auto;
+	width: 80%;
 }

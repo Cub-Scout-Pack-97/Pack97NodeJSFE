@@ -7,16 +7,19 @@
 		<input type="input" name="contact_email" id="email" value='{{email}}' class="hide">
 		<input type="input" name="event_id" id="event_id" value='{{event_id}}' class="hide">
 		<input type="input" name="_id" id="contact_id" value='{{contact.0._id}}' class="hide">
-		<select name="type" class="new_att">
+		<select name="type" id="att_type" class="block new_att" required>
+			<option value="" disabled selected>Type of Attendee</option>
 			<option value="scout">Scout</option>
 			<option value="leader">Leader</option>
 			<option value="adult">Adult</option>
 			<option value="other">Child</option>
 		</select>
-		<input type="date" name="birthdate" id="birthdate" placeholder="Child's birthday">
-		<input type="input" name="attendee_first_name" placeholder="First Name" class="new_att">
-		<input type="input" name="attendee_last_name" placeholder="Last Name" class="new_att">
-		<select name="detail" class="new_att">
+		<label for="birthdate" class="new_att birthdate hide">Child's birthday</label>
+		<input type="date" name="birthdate" id="birthdate" class="new_att birthdate hide">
+		<input type="input" name="attendee_first_name" placeholder="First Name" class="block new_att" required>
+		<input type="input" name="attendee_last_name" placeholder="Last Name" class="block new_att" required>
+		<select name="detail" class="block new_att" required>
+			<option value="male" disabled selected>Gender</option>
 			<option value="male">Male</option>
 			<option value="female">Female</option>
 		</select>

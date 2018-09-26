@@ -50,14 +50,33 @@ $('.attendees').on('click',function(attendee){
 	}else{
 		total = 0.00;
 	}
-	let cost = parseFloat($(this).siblings('label').find('.cost').html()).toFixed(2);
+	let cost = parseFloat($(this).siblings('label').find('.cost').html());
 	if($(this).prop("checked")){
-		$('#total').html(total + cost);
+		$('#total').html((total + cost).toFixed(2));
 	}else{
-		$('#total').html(total - cost);
+		$('#total').html((total - cost).toFixed(2));
 	}
 });
-
+$('#att_type').on('change',function(type){
+	const selected = $("select option:selected").val();
+	if(selected === "other"){
+		$('.birthdate').css('display','block');
+	}else{
+		$('.birthdate').hide();
+	}
+});
+$('#second_child_range').on('click',()=>{
+	$('#other_child_range').toggle();
+})
 function showhide(id){
 	$(id).toggle();
 };
+$("#event_image").slick({
+	dots:true,
+    arrows:false,
+    slidesToShow: 1,
+    slidesToScroll: 1
+});
+$("#event_image").on('click',function(image){
+	$('#select_image').val($('.slick-current').find('img').attr('src'));
+});

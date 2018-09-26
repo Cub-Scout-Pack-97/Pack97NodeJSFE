@@ -6,9 +6,9 @@ getattendees  = function(family, context){
 	}
 	var accum = '';
     const costs = JSON.parse(family.costs);
-    console.log(costs);
     for(var i = 0; i < family.length; i ++){
             let fam = family[i];
+            console.log(fam);
             let price = 0;
             if(fam.type === "scout"){
                 price = costs.scout;
@@ -17,6 +17,7 @@ getattendees  = function(family, context){
             }else if(fam.type === "adult"){
                 price = costs.adult;
             }else if(fam.type === "other"){
+                fam.type = "Child";
                 price = costs.other;
             }
             fam.price = price;
