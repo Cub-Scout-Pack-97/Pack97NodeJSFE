@@ -34,7 +34,6 @@ tr.sectiontableentry1 {
     background-color: #ddd;
     padding: 5px;
 }
-
 .inline_block{
     display: inline-block;
 }
@@ -54,11 +53,8 @@ tr.sectiontableentry1 {
     margin-left: auto;
     margin-right: auto;
 }
-.slick-next:before {
-    color: black;
-}
-.slick-prev:before {
-    color: black;
+.slick-next:before,.slick-prev:before {
+    color: #026 !important;
 }
 
 /* Banners */
@@ -100,20 +96,28 @@ span.icon_menu {
 h3.datetime {
     text-align: center;
 }
-body{
+html,body{
 	margin:0px;
+    padding:0px;
+    height:100%;
 	font-family: sans-serif;
 }
+
 header{
 	width:100%;
 	height: 150px;
 }
-footer{
-	background:#002266; 
-	padding:15px; 
-	position: absolute; 
+.inner_foot{
+	/*background:#026; 
+	height:240px;
+	position: inherit; 
 	left:0px; 
 	right:0px;
+    bottom: 0px;*/
+}
+.container {
+    margin-top: 25px;
+    padding-bottom:240px; 
 }
 h1 {
     font-size: 48px;
@@ -152,7 +156,20 @@ h2 {
 .font1_5{
     font-size: 1.5em;
 }
+#container{
+    min-height:100%;
+    position:relative;
+}
 /* Footer */
+footer{
+    /*clear:both;*/
+    position: absolute;
+    /*left: 0px;
+    right: 0px;*/
+    background-color: #026;
+    width:100%;
+    bottom: 0px;
+}
 footer h3{
 	color:#ffff00;
     text-align:center;
@@ -244,7 +261,12 @@ p.item84{
 .grid66{
     width:66%;
 }
-
+.grid25{
+    width:25%;
+}
+.grid75{
+    width:75%;
+}
 .footer_grid33{
 	width:33%; 
 	float:left; 

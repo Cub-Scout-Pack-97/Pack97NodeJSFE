@@ -1,9 +1,11 @@
 {{#if visible}}
 	<div class="card_container" id="{{_id}}">	
 		<div class="card_date" style="background-image:url('{{select_image}}')">
-			{{event_date}}
-			<div class="reg_close_date">
-				{{reg_close}}
+			<div class="card_dates">
+				{{#formatdate event_date}}{{@formatteddate}}{{/formatdate}}
+				<div class="reg_close_date">
+					{{#formatdate reg_close}}{{@formatteddate}}{{/formatdate}}
+				</div>
 			</div>
 		</div>
 		<div class="card_info">

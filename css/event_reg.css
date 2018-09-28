@@ -19,6 +19,39 @@ div#email_container{
 	color: #777;
 	margin: 5px;
 }
+#function_buttons input {
+    width: 100%;
+}
+.events {
+    margin-left: 20px;
+    margin-bottom: 15px;
+    padding-bottom: 5px;
+    border-bottom: #555 solid 1px;
+}
+.event_dates label {
+    color: #555;
+    margin-left: 20px;
+}
+.metrics{
+    margin: 5px 0px;
+}
+.metrics div label{
+    font-weight: bold;;
+}
+a.event_title {
+    font-size: 1.5em;
+    text-decoration: none;
+    color: #000;
+    font-weight: bold;
+}
+.event_actions a, .event_actions input {
+    display: inline;
+}
+
+.event_actions {
+    margin-right: 10px;
+    width:150px;
+}
 .att.main{
 	font-size: 1.25em;
 }
@@ -28,6 +61,9 @@ img.event_image_src {
 .att.last_name, .sub .att {
     margin-right: 10px;
     text-transform: capitalize;
+}
+#function_buttons{
+    padding: 0px 115px;
 }
 .contact_name{
 	margin-bottom: 20px;

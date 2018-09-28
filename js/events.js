@@ -73,9 +73,17 @@ function showhide(id){
 };
 $("#event_image").slick({
 	dots:true,
-    arrows:false,
+    arrows:true,
     slidesToShow: 1,
     slidesToScroll: 1
+});
+$('#events_home').slick({
+  dots: true,
+  infinite: true,
+  speed: 300,
+  slidesToShow: 1,
+  centerMode: true,
+  variableWidth: true
 });
 $("#event_image").on('click',function(image){
 	$('#select_image').val($('.slick-current').find('img').attr('src'));
