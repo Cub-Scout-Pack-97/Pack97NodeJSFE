@@ -1,7 +1,7 @@
 'use strict';
 
 const Hapi = require('hapi');
-const HapiAuthCookie = require('hapi-auth-cookie');
+//const HapiAuthCookie = require('hapi-auth-cookie');
 const Wreck = require('wreck');
 const server = new Hapi.Server({
 	port: 3003, 
@@ -43,9 +43,56 @@ async function startInsert(){
 	});
 }
 
+async function startAuth(){
+	await server.register({
+		plugin: require('hapi-auth-cookie')
+	});
+}
+
+
+// let uuid = 1;
+
+// async function authCookie(){
+// 	await server.register(require('hapi-auth-cookie'));
+
+// 	const cache = server.cache({ segment: 'sessions', expiresIn: 3 * 24 * 60 * 60 * 1000 });
+//     server.app.cache = cache;
+
+//     server.auth.strategy('session', 'cookie', {
+//         password: 'CnBEYC2EWb9WffbEofjG6Js0aIJZN1hO',
+//         cookie: 'scout_code',
+//         redirectTo: '/login',
+//         isSecure: false,
+//         validateFunc: async (request, session) => {
+//         	console.log(request);
+//             const cached = await cache.get(session.sid);
+//             const out = {
+//                 valid: !!cached
+//             };
+ 
+//             if (out.valid) {
+//                 out.credentials = cached.account;
+//             }
+ 
+//             return out;
+//         }
+//     });
+ 
+//     server.auth.default('session');
+// }
+
 const init = async () => {
+	await startAuth();
+	server.auth.strategy('session','cookie',{
+		password: 'CnBEYC2EWb9WffbEofjG6Js0aIJZN1hO',
+		isSameSite: 'Lax',
+		cookie: 'scout_code',
+        redirectTo: '/login'
+	});
+	
 	server.route([
 			{
+				/** Functions -----------------------------------------*/
 				method:'GET',
 				path:'/images/{images}',
 				handler:(request,h)=>{
@@ -232,8 +279,7 @@ const init = async () => {
 					const wreck = await Wreck.post('http://10.5.0.7:4477/api/pack97/event/add/attendees', { payload: request.payload }, (err, res, payload) => {
 					    console.log(`Error ${err}`)
 					});
-					h.redirect('/events');
-					return true; 
+					return h.redirect('/events');
 					
 				}
 			},
@@ -251,8 +297,7 @@ const init = async () => {
 					const wreck = await Wreck.post('http://10.5.0.7:4477/api/pack97/event/new', { payload: request.payload }, (err, res, payload) => {
 					    console.log(`Error ${err}`)
 					});
-					h.redirect('/events/admin/list/event_date/1');
-					return true; 
+					return h.redirect('/events/admin/list/event_date/1');
 				}
 			},
 			{
@@ -286,25 +331,31 @@ const init = async () => {
 					const wreck = await Wreck.post('http://10.5.0.7:4477/api/pack97/contact/add/family', { payload: attendee }, (err, res, payload) => {
 					    console.log(`Error ${err}`)
 					});
-					h.redirect(`/events/register/${request.payload.event_id}`);
-					return true;
+					return h.redirect(`/events/register/${request.payload.event_id}`);
 				}
 			},
 			{
 				method:'GET',
 				path:'/events/admin/list/{field}/{direction}',
-				handler: async (request,h) => {
-					const field = request.params.field;
-					const direction = request.params.direction;
-					const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/event/list/${field}/${direction}`);
-					let data = {"events":JSON.parse(payload)};
-					return h.view('events_admin_list',data);
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler: async (request,h) => {
+						console.log(request.auth.credentials);
+						const field = request.params.field;
+						const direction = request.params.direction;
+						const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/event/list/${field}/${direction}`);
+						let data = {"events":JSON.parse(payload)};
+						return h.view('events_admin_list',data);
+					}
 				}
 			},
 			{
 				method:'GET',
 				path:'/events/admin/event',
-				handler:(request,h) =>{
+				handler: async(request,h) =>{
 					const pay = {"path":"/event/save"};
 					return h.view('eventbuild',pay);
 				}
@@ -332,8 +383,7 @@ const init = async () => {
 					const wreck = await Wreck.post('http://10.5.0.7:4477/api/pack97/event/update', { payload: payload }, (err, res, payload) => {
 					    console.log(`Error ${err}`)
 					});
-					h.redirect('/events/admin/list/event_date/1');
-					return true;
+					return h.redirect('/events/admin/list/event_date/1');
 				}
 			},
 			{
@@ -346,14 +396,28 @@ const init = async () => {
 			{
 				method:"POST",
 				path:"/login",
-				handler:(request,h) => {
-					return h.view('login');
+				handler: async (request,h) => {
+					let data = {};
+					data["email"] = request.payload.username;
+					data["password"] = request.payload.password;
+
+					const {res,payload} = await Wreck.post('http://10.5.0.7:4477/api/pack97/user/validation',{payload: data}, (err, res, payload) => {
+					    console.log(`Error ${err}`)
+					});
+					const response = JSON.parse(payload);
+					if (response.response === 'success'){
+						request.cookieAuth.set({id: data.email});
+						return h.redirect('/events/admin/list/event_date/1');
+					}else{
+						return h.view('login',response);
+					}
 				}
 			}
 		]);
 	try {  
 		await startVision();
 		await startInsert();
+
 	  	await server.start();
 	   	console.log(`${new Date()} Server running at: ${server.info.uri}/`);
 	}

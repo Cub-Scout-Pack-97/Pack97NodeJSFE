@@ -1,9 +1,10 @@
 <form method="POST" action="/login">
-	<div class="horCenter">
-		<input type="email" name="email">
-		<input type="password" name="pass">
+	<p class="error">{{response}}</p>
+	<div class="horCenter login_form">
+		<input type="input" name="username" class="grid100" placeholder="Username">
+		<input type="password" name="password" class="grid100" placeholder="Password">
 		<a href="">I forgot my password</a>
-		<input type="submit">
+		<input type="submit" class="btn horCenter" value="Login">
 	</div>
-	<a href="">Create an Account</a>
+	<input id="new_account" class="btn horCenter" value="Create an Account">
 </form>

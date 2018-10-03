@@ -45,6 +45,15 @@ tr.sectiontableentry1 {
     font-size: 1.3em;
 }
 
+.login_form{
+    width:300px;
+}
+.login_form input{
+    font-size: 1.5em;
+    display: block;
+    margin-top: 20px;
+    text-align: center;
+}
 /* Home Page */
 /* Banner slider */
 .mt20 {
@@ -273,9 +282,18 @@ p.item84{
     text-align:center;
 	margin:0px 0px 0px 3px;
 }
+p.error{
+    color:red;
+    font-size: 1.25em;
+    margin: auto;
+    width: 385px;
+}
 .horCenter{
 	margin-left: auto;
 	margin-right: auto;
+}
+#new_account {
+    margin-top: 75px;
 }
 .grid100{
 	width:100%;
