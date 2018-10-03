@@ -55,14 +55,18 @@ async function startAuth(){
 
 const init = async () => {
 	await startAuth();
-	const cache = server.cache({ segment: 'sessions', expiresIn: 3 * 24 * 60 * 60 * 1000 });
+
+	const cache = server.cache({ segment: 'sessions', expiresIn: 2 * 60000 });
     server.app.cache = cache;
 
 	server.auth.strategy('session', 'cookie', {
 	        password: 'CnBEYC2EWb9WffbEofjG6Js0aIJZN1hO',
 	        cookie: 'scout_code',
 	     //   redirectTo: '/login',
+	     	keepAlive: true,
+	     	ttl: 5 * 60000, //5 minutes
 	        isSecure: false,
+	        clearInvalid: true,
 	        validateFunc: async (request, session) => {
 
 	            const cached = await cache.get(session.sid);
@@ -77,6 +81,7 @@ const init = async () => {
 	            return out;
 	        }
 	    });
+	//server.auth.default('session');
 	
 	server.route([
 			{
@@ -133,7 +138,7 @@ const init = async () => {
 					if (request.auth.isAuthenticated) {
 				        data["admin"] = true;
 				    }
-				    console.log(request.auth);
+				    console.log(request.auth.isAuthenticated);
 					data["events"] = events;
 					return h.view('homepage',data);
 				}
@@ -338,18 +343,17 @@ const init = async () => {
       					strategy: 'session'
 					},
 					handler: async (request,h) => {
+						let data = {};
+						data["admin"] = false;
 						if (!request.auth.isAuthenticated) {
 					        return h.redirect('/login');
+					    }else{
+					    	data["admin"] = true;
 					    }
 						const field = request.params.field;
 						const direction = request.params.direction;
 						const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/event/list/${field}/${direction}`);
-						let data = {"events":JSON.parse(payload)};
-						data["admin"] = false;
-						if (request.auth.isAuthenticated) {
-					        data["admin"] = true;
-					    }
-					    console.log(request.auth);
+						data["events"] = JSON.parse(payload);
 						return h.view('events_admin_list',data);
 					}
 				}
@@ -357,25 +361,37 @@ const init = async () => {
 			{
 				method:'GET',
 				path:'/events/admin/event',
-				handler: async(request,h) =>{
-					if (!request.auth.isAuthenticated) {
-				        return h.redirect('/login');
-				    }
-					const pay = {"path":"/event/save"};
-					return h.view('eventbuild',pay);
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler: async(request,h) =>{
+						if (!request.auth.isAuthenticated) {
+					        return h.redirect('/login');
+					    }
+						const pay = {"path":"/event/save"};
+						return h.view('eventbuild',pay);
+					}
 				}
 			},
 			{
 				method:'GET',
 				path:'/events/admin/event/{id}',
-				handler: async(request,h) =>{
-					if (!request.auth.isAuthenticated) {
-				        return h.redirect('/login');
-				    }
-					const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/event/${request.params.id}`);
-					const pay = JSON.parse(payload);
-					pay.path = "/event/update";
-					return h.view('eventbuild',pay);
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler: async(request,h) =>{
+						if (!request.auth.isAuthenticated) {
+					        return h.redirect('/login');
+					    }
+						const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/event/${request.params.id}`);
+						const pay = JSON.parse(payload);
+						pay.path = "/event/update";
+						return h.view('eventbuild',pay);
+					}
 				}
 			},
 			{
@@ -423,7 +439,7 @@ const init = async () => {
 						request.cookieAuth.set({ sid });
 
 						//request.cookieAuth.set(response);
-						return h.redirect('/events/admin/list/event_date/1');
+						return h.redirect('/');
 					}else{
 						return h.view('login',response);
 					}
@@ -434,7 +450,7 @@ const init = async () => {
 				path:"/logout",
 				handler: async (request,h) =>{
 					request.cookieAuth.clear()
-					return true;
+					return h.redirect('/login');
 				}
 			}
 		]);
