@@ -22,6 +22,9 @@ function locationHREF(location){
 	address = address.replace(/,/g,"%2C");
 	return'href',"https://www.google.com/maps/embed/?api=1&query=" + address;
 }
+function tildaToSlash(str){
+	return str.replace(/~/g,'/');
+}
 
 async function startVision() {
 	await server.register({
@@ -62,9 +65,8 @@ const init = async () => {
 	server.auth.strategy('session', 'cookie', {
 	        password: 'CnBEYC2EWb9WffbEofjG6Js0aIJZN1hO',
 	        cookie: 'scout_code',
-	     //   redirectTo: '/login',
 	     	keepAlive: true,
-	     	ttl: 5 * 60000, //5 minutes
+	     	ttl: 30 * 60000, //30 minutes
 	        isSecure: false,
 	        clearInvalid: true,
 	        validateFunc: async (request, session) => {
@@ -131,144 +133,185 @@ const init = async () => {
 				/** Home Route --------------------------*/
 				method:"GET",
 				path:"/",
-				handler: async (request,h) => {
-					const {res,payload} = await Wreck.get('http://10.5.0.7:4477/api/pack97/event/list/event_date/1');
-					const events = JSON.parse(payload);
-					const data = {"admin":false};
-					if (request.auth.isAuthenticated) {
-				        data["admin"] = true;
-				    }
-				    console.log(request.auth.isAuthenticated);
-					data["events"] = events;
-					return h.view('homepage',data);
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler: async (request,h) => {
+						const {res,payload} = await Wreck.get('http://10.5.0.7:4477/api/pack97/event/list/event_date/1');
+						const events = JSON.parse(payload);
+						const data = {};
+					    data["admin"] = request.auth.isAuthenticated;
+					    data["redirect"] = "~";
+						data["events"] = events;
+						return h.view('homepage',data);
+					}
 				}
 			},
 			{
 				/** Program page route --------------------*/
 				method:"GET",
 				path:"/program",
-				handler: (request,h) => {
-					const data = {"admin":false};
-					if (request.auth.isAuthenticated) {
-				        data["admin"] = true;
-				    }
-					data["events"] = events.events;
-					return h.view('program',data);
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler: (request,h) => {
+						const data = {"admin":request.auth.isAuthenticated};
+						data["redirect"] = "~program";
+						return h.view('program',data);
+					}
 				}
 			},
 			{
 				/** Leader Page Routes --------------------*/
 				method:"GET",
 				path:"/leaders",
-				handler: async (request,h) => {
-					let data;
-					try{	
-						const {res,payload} = await Wreck.get('http://10.5.0.7:4477/api/pack97/leader/list');
-						const leader = JSON.parse(payload);
-						data = {
-							"admin":false,
-							"leaders":leader,
-							"page_title":"Leaders"
-						};
-						
-					}catch(err){
-						console.log("failed" + err);
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler: async (request,h) => {
+						let data;
+						try{	
+							const {res,payload} = await Wreck.get('http://10.5.0.7:4477/api/pack97/leader/list');
+							const leader = JSON.parse(payload);
+							data = {
+								"admin":request.auth.isAuthenticated,
+								"leaders":leader,
+								"page_title":"Leaders"
+							};
+							data["redirect"] = "~leaders";
+						}catch(err){
+							console.log("failed" + err);
+						}
+						return h.view('leaders',data);
 					}
-					return h.view('leaders',data);
 				}
 			},
 			{
 				/** Comittee Page Routes ------------------*/
 				method:"GET",
 				path:"/committee",
-				handler: async (request,h) => {
-					let data;
-					try{	
-						const {res,payload} = await Wreck.get('http://10.5.0.7:4477/api/pack97/committee/list');
-						const committee = JSON.parse(payload);
-						data = {
-							"admin":false,
-							"leaders":committee,
-							"page_title":"Committee"
-						};
-						
-					}catch(err){
-						console.log("failed" + err);
-					}
-					return h.view('leaders',data);
-				}	
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler: async (request,h) => {
+						let data;
+						try{	
+							const {res,payload} = await Wreck.get('http://10.5.0.7:4477/api/pack97/committee/list');
+							const committee = JSON.parse(payload);
+							data = {
+								"admin":request.auth.isAuthenticated,
+								"leaders":committee,
+								"page_title":"Committee"
+							};
+							data["redirect"] = "~committee";
+						}catch(err){
+							console.log("failed" + err);
+						}
+						return h.view('leaders',data);
+					}	
+				}
 			},
 			{
 				/** Events page Routes -------------------*/
 				method:"GET",
 				path:"/events",
-				handler: async (request,h) => {
-					let data;
-					try{	
-						const {res,payload} = await Wreck.get('http://10.5.0.7:4477/api/pack97/event/list/event_date/1');
-						const events = JSON.parse(payload);
-						for(var i=0;i < events.length;i++){
-							if(events[i].location !== undefined){
-								events[i].location = locationHREF(events[i].location);
-							}
-						};
-						data = {
-							"admin":false,
-							"events":events
-						};
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler: async (request,h) => {
+						let data;
+						try{	
+							const {res,payload} = await Wreck.get('http://10.5.0.7:4477/api/pack97/event/list/event_date/1');
+							const events = JSON.parse(payload);
+							for(var i=0;i < events.length;i++){
+								if(events[i].location !== undefined){
+									events[i].location = locationHREF(events[i].location);
+								}
+							};
+							data = {
+								"admin":request.auth.isAuthenticated,
+								"events":events
+							};
+							data["redirect"] = "~events";
+						}catch(err){
+							console.log("failed" + err);
+						}
 						
-					}catch(err){
-						console.log("failed" + err);
+						return h.view('events_home',data);
 					}
-					
-					return h.view('events_home',data);
 				}
 			},
 			{
 				/** */
 				method:'GET',
 				path:'/events/register/{event_id}',
-				handler: async (request,h) => {
-					const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/event/${request.params.event_id}`);
-					const event = JSON.parse(payload);
-					let costs = {};
-					costs['scout'] = event.cost_scout.$numberDecimal;
-					costs['leader'] = event.cost_leader.$numberDecimal;
-					costs['adult'] = event.cost_adult.$numberDecimal;
-					costs['other'] = event.cost_other.$numberDecimal;
-					costs['min'] = event.child_age_min;
-					costs['max'] = event.child_age_max;
-					costs['other2'] = event.cost_other2.$numberDecimal;
-					costs['min2'] = event.child_age_min2;
-					costs['max2'] = event.child_age_max2;
-					const data = {
-						"path":`/events/registration`,
-						"method":"POST",
-						"event_id":request.params.event_id,
-						"payment":JSON.stringify(event.payment),
-						"costs":JSON.stringify(costs)
-					};
-					return h.view(`events_reg`,data);
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler: async (request,h) => {
+						const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/event/${request.params.event_id}`);
+						const event = JSON.parse(payload);
+						let costs = {};
+						costs['scout'] = event.cost_scout.$numberDecimal;
+						costs['leader'] = event.cost_leader.$numberDecimal;
+						costs['adult'] = event.cost_adult.$numberDecimal;
+						costs['other'] = event.cost_other.$numberDecimal;
+						costs['min'] = event.child_age_min;
+						costs['max'] = event.child_age_max;
+						costs['other2'] = event.cost_other2.$numberDecimal;
+						costs['min2'] = event.child_age_min2;
+						costs['max2'] = event.child_age_max2;
+						const data = {
+							"admin":request.auth.isAuthenticated,
+							"path":`/events/registration`,
+							"method":"POST",
+							"event_id":request.params.event_id,
+							"payment":JSON.stringify(event.payment),
+							"costs":JSON.stringify(costs)
+						};
+						data["redirect"] = `~events~register~${request.params.event_id}`;
+						return h.view(`events_reg`,data);
+					}
 				}
 			},
 			{
 				method:'POST',
 				path:'/events/registration',
-				handler: async (request,h) => {
-					try{
-						const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/contact/email/${request.payload.contact_email}`);
-						const contact = JSON.parse(payload);
-						let data = {};
-						contact[0].family['costs'] = request.payload.costs;
-						data['email'] = request.payload.contact_email;
-						data['event_id'] = request.payload.event_id;
-						data['contact'] = contact;
-						data['path'] = "/events/register/attendee";
-						data['method'] = "POST";
-						data['payment'] = request.payload.payment;
-						return h.view(`events_reg`,data);
-					}catch(err){
-						console.log("failed" + err);
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler: async (request,h) => {
+						try{
+							const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/contact/email/${request.payload.contact_email}`);
+							const contact = JSON.parse(payload);
+							let data = {};
+							contact[0].family['costs'] = request.payload.costs;
+							data['admin'] = request.auth.isAuthenticated;
+							data['email'] = request.payload.contact_email;
+							data['event_id'] = request.payload.event_id;
+							data['contact'] = contact;
+							data['path'] = "/events/register/attendee";
+							data['method'] = "POST";
+							data['payment'] = request.payload.payment;
+							data["redirect"] = "~events~registration";
+							return h.view(`events_reg`,data);
+						}catch(err){
+							console.log("failed" + err);
+						}
 					}
 				}
 			},
@@ -303,35 +346,43 @@ const init = async () => {
 			{
 				method: 'POST',
 				path: '/events/add/family',
-				handler: async (request,h) => {
-					const attendee = {"_id":request.payload._id};
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler: async (request,h) => {
+						const attendee = {"_id":request.payload._id};
 
-					let family = {
-						"type":request.payload.type,
-						"first_name":request.payload.attendee_first_name,
-						"last_name":request.payload.attendee_last_name,
-						"detail":request.payload.detail
-					}
-					if(request.payload.type === 'scout'){
-						const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/scout/name/${request.payload.attendee_first_name}/${request.payload.attendee_last_name}`);
-						const scout = JSON.parse(payload);
-						if(scout.length > 0){	
-							family["scout_id"] = scout[0]._id;
-							family["den"] = scout[0].den;
-							family["rank"] = scout[0].rank;
-						}else{
-							request.payload.error = `We were unable to find ${request.payload.attendee_first_name} ${request.payload.attendee_last_name} as scout in our system. If this continues please notify the <a href="mailto://webmaster@cunscoutpack97.org">Webmaster</a>`
-							request.payload.path = "/events/registration";
-							request.payload.method= "POST";
-							return h.view("events_reg",request.payload);
+						let family = {
+							"type":request.payload.type,
+							"first_name":request.payload.attendee_first_name,
+							"last_name":request.payload.attendee_last_name,
+							"detail":request.payload.detail
 						}
+						if(request.payload.type === 'scout'){
+							const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/scout/name/${request.payload.attendee_first_name}/${request.payload.attendee_last_name}`);
+							const scout = JSON.parse(payload);
+							if(scout.length > 0){	
+								family["scout_id"] = scout[0]._id;
+								family["den"] = scout[0].den;
+								family["rank"] = scout[0].rank;
+							}else{
+								request.payload.error = `We were unable to find ${request.payload.attendee_first_name} ${request.payload.attendee_last_name} as scout in our system. If this continues please notify the <a href="mailto://webmaster@cunscoutpack97.org">Webmaster</a>`
+								request.payload.path = "/events/registration";
+								request.payload.method= "POST";
+								const data = request.payload
+								data['admin'] = request.auth.isAuthenticated;
+								data["redirect"] = "~events~add~family";
+								return h.view("events_reg",data);
+							}
+						}
+						attendee["family"] = family;
+						const wreck = await Wreck.post('http://10.5.0.7:4477/api/pack97/contact/add/family', { payload: attendee }, (err, res, payload) => {
+						    console.log(`Error ${err}`)
+						});
+						return h.redirect(`/events/register/${request.payload.event_id}`);
 					}
-
-					attendee["family"] = family;
-					const wreck = await Wreck.post('http://10.5.0.7:4477/api/pack97/contact/add/family', { payload: attendee }, (err, res, payload) => {
-					    console.log(`Error ${err}`)
-					});
-					return h.redirect(`/events/register/${request.payload.event_id}`);
 				}
 			},
 			{
@@ -344,16 +395,12 @@ const init = async () => {
 					},
 					handler: async (request,h) => {
 						let data = {};
-						data["admin"] = false;
-						if (!request.auth.isAuthenticated) {
-					        return h.redirect('/login');
-					    }else{
-					    	data["admin"] = true;
-					    }
+						data["admin"] = request.auth.isAuthenticated;
 						const field = request.params.field;
 						const direction = request.params.direction;
 						const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/event/list/${field}/${direction}`);
 						data["events"] = JSON.parse(payload);
+						data["redirect"] = `~events~admin~list~${field}~${direction}`;
 						return h.view('events_admin_list',data);
 					}
 				}
@@ -371,6 +418,8 @@ const init = async () => {
 					        return h.redirect('/login');
 					    }
 						const pay = {"path":"/event/save"};
+						pay["admin"] = request.auth.isAuthenticated;
+						pay["redirect"] = "~events~admin~event";
 						return h.view('eventbuild',pay);
 					}
 				}
@@ -390,6 +439,8 @@ const init = async () => {
 						const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/event/${request.params.id}`);
 						const pay = JSON.parse(payload);
 						pay.path = "/event/update";
+						pay["admin"] = request.auth.isAuthenticated;
+						pay["redirect"] = `~events~admin~event~${request.params.id}`;
 						return h.view('eventbuild',pay);
 					}
 				}
@@ -397,24 +448,31 @@ const init = async () => {
 			{
 				method:'POST',
 				path:'/event/update',
-				handler: async(request,h) => {
-					let payload = request.payload;
-					payload.enabled = checkToBoolean(request.payload.enabled);
-					payload.visible = checkToBoolean(request.payload.visible);
-					payload.lead_notify = checkToBoolean(request.payload.lead_notify);
-					payload.backpacking = checkToBoolean(request.payload.backpacking);
-					payload.tshirt = checkToBoolean(request.payload.tshirt);
-					const wreck = await Wreck.post('http://10.5.0.7:4477/api/pack97/event/update', { payload: payload }, (err, res, payload) => {
-					    console.log(`Error ${err}`)
-					});
-					return h.redirect('/events/admin/list/event_date/1');
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler: async(request,h) => {
+						let payload = request.payload;
+						payload.enabled = checkToBoolean(request.payload.enabled);
+						payload.visible = checkToBoolean(request.payload.visible);
+						payload.lead_notify = checkToBoolean(request.payload.lead_notify);
+						payload.backpacking = checkToBoolean(request.payload.backpacking);
+						payload.tshirt = checkToBoolean(request.payload.tshirt);
+						const wreck = await Wreck.post('http://10.5.0.7:4477/api/pack97/event/update', { payload: payload }, (err, res, payload) => {
+						    console.log(`Error ${err}`)
+						});
+						return h.redirect('/events/admin/list/event_date/1');
+					}
 				}
 			},
 			{
 				method:"GET",
 				path:"/login",
 				handler:(request,h) => {
-					return h.view('login');
+					const data = {'redirect':request.query.redirect};
+					return h.view('login',data);
 				}
 			},
 			{
@@ -439,7 +497,7 @@ const init = async () => {
 						request.cookieAuth.set({ sid });
 
 						//request.cookieAuth.set(response);
-						return h.redirect('/');
+						return h.redirect(tildaToSlash(request.payload.redirect));
 					}else{
 						return h.view('login',response);
 					}
