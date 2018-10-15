@@ -1,8 +1,8 @@
 'use strict';
 
 const Hapi = require('hapi');
-//const HapiAuthCookie = require('hapi-auth-cookie');
 const Wreck = require('wreck');
+
 const server = new Hapi.Server({
 	port: 3003, 
 	host: '0.0.0.0'
@@ -391,9 +391,11 @@ const init = async () => {
 				config: {
 					auth: {
 						mode: 'try',
-      					strategy: 'session'
+      					strategy: 'session',
+      					scope: "events"
 					},
 					handler: async (request,h) => {
+						console.log(request.auth);
 						let data = {};
 						data["admin"] = request.auth.isAuthenticated;
 						const field = request.params.field;
@@ -411,7 +413,8 @@ const init = async () => {
 				config: {
 					auth: {
 						mode: 'try',
-      					strategy: 'session'
+      					strategy: 'session',
+      					scope: "events"
 					},
 					handler: async(request,h) =>{
 						if (!request.auth.isAuthenticated) {
@@ -430,7 +433,8 @@ const init = async () => {
 				config: {
 					auth: {
 						mode: 'try',
-      					strategy: 'session'
+      					strategy: 'session',
+      					scope: "events"
 					},
 					handler: async(request,h) =>{
 						if (!request.auth.isAuthenticated) {
@@ -451,7 +455,8 @@ const init = async () => {
 				config: {
 					auth: {
 						mode: 'try',
-      					strategy: 'session'
+      					strategy: 'session',
+      					scope: "events"
 					},
 					handler: async(request,h) => {
 						let payload = request.payload;
@@ -495,9 +500,14 @@ const init = async () => {
 						const sid = String(++uuid);
 						await request.server.app.cache.set(sid, { response }, 0);
 						request.cookieAuth.set({ sid });
+						request.auth.credentials = response.scope;
 
 						//request.cookieAuth.set(response);
-						return h.redirect(tildaToSlash(request.payload.redirect));
+						let redirect = request.payload.redirect;
+						if(redirect === undefined || redirect === null || redirect === ""){
+							redirect = "/";
+						}
+						return h.redirect(tildaToSlash(redirect));
 					}else{
 						return h.view('login',response);
 					}
@@ -509,6 +519,45 @@ const init = async () => {
 				handler: async (request,h) =>{
 					request.cookieAuth.clear()
 					return h.redirect('/login');
+				}
+			},
+			{
+				method:"GET",
+				path:"/forgotpassword",
+				handler: (request,h) => {
+					return h.view('forgotpassword');
+				}
+			},
+			{
+				method:"POST",
+				path:"/forgotpassword",
+				handler: async (request,h) => {
+					const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/contact/email/${request.payload.username}`);
+					const data = JSON.parse(payload);
+					if(data.length > 0){
+						data["response"] = "An email has been sent with instructions on resetting your password";
+					}else{
+						data["response"] = "Sorry, we don't have your email as a username";
+					}
+					return h.view('forgotpassword',data);
+				}
+			},
+			{
+				method:"GET",
+				path:"/contacts/admin",
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session',
+      					scope: "contacts"
+					},
+					handler: async (request,h) => {
+						const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/contact/list`);
+						const data = {};
+						data['admin'] = request.auth.isAuthenticated;
+						data['contacts'] = JSON.parse(payload);
+						return h.view('contact_management',data);
+					}
 				}
 			}
 		]);

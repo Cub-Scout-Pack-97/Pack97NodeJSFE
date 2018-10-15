@@ -46,6 +46,7 @@ tr.sectiontableentry1 {
 }
 
 .login_form{
+    margin-top:75px;
     width:300px;
 }
 .login_form input{
