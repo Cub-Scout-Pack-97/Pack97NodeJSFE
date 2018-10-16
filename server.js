@@ -178,7 +178,12 @@ const init = async () => {
 						const {res,payload} = await Wreck.get('http://10.5.0.7:4477/api/pack97/event/list/event_date/1');
 						const events = JSON.parse(payload);
 						const data = {};
-					    data["admin"] = request.auth.isAuthenticated;
+						if(request.auth.credentials !== null && request.auth.credentials.scope.length > 0){
+							const credentials = request.auth.credentials.scope;
+							credentials.forEach((cred) => {
+								data[cred + "_admin"] = cred;
+							}); 
+						}
 					    data["redirect"] = "~";
 						data["events"] = events;
 						return h.view('homepage',data);
@@ -195,7 +200,13 @@ const init = async () => {
       					strategy: 'session'
 					},
 					handler: (request,h) => {
-						const data = {"admin":request.auth.isAuthenticated};
+						const data = {};
+						if(request.auth.credentials !== null && request.auth.credentials.scope.length > 0){
+							const credentials = request.auth.credentials.scope;
+							credentials.forEach((cred) => {
+								data[cred + "_admin"] = cred;
+							}); 
+						}
 						data["redirect"] = "~program";
 						return h.view('program',data);
 					}
@@ -216,10 +227,15 @@ const init = async () => {
 							const {res,payload} = await Wreck.get('http://10.5.0.7:4477/api/pack97/leader/list');
 							const leader = JSON.parse(payload);
 							data = {
-								"admin":request.auth.isAuthenticated,
 								"leaders":leader,
 								"page_title":"Leaders"
 							};
+							if(request.auth.credentials !== null && request.auth.credentials.scope.length > 0){
+								const credentials = request.auth.credentials.scope;
+								credentials.forEach((cred) => {
+									data[cred + "_admin"] = cred;
+								}); 
+							}
 							data["redirect"] = "~leaders";
 						}catch(err){
 							console.log("failed" + err);
@@ -243,10 +259,15 @@ const init = async () => {
 							const {res,payload} = await Wreck.get('http://10.5.0.7:4477/api/pack97/committee/list');
 							const committee = JSON.parse(payload);
 							data = {
-								"admin":request.auth.isAuthenticated,
 								"leaders":committee,
 								"page_title":"Committee"
 							};
+							if(request.auth.credentials !== null && request.auth.credentials.scope.length > 0){
+								const credentials = request.auth.credentials.scope;
+								credentials.forEach((cred) => {
+									data[cred + "_admin"] = cred;
+								}); 
+							}
 							data["redirect"] = "~committee";
 						}catch(err){
 							console.log("failed" + err);
@@ -275,9 +296,14 @@ const init = async () => {
 								}
 							};
 							data = {
-								"admin":request.auth.isAuthenticated,
 								"events":events
 							};
+							if(request.auth.credentials !== null && request.auth.credentials.scope.length > 0){
+								const credentials = request.auth.credentials.scope;
+								credentials.forEach((cred) => {
+									data[cred + "_admin"] = cred;
+								}); 
+							}
 							data["redirect"] = "~events";
 						}catch(err){
 							console.log("failed" + err);
@@ -310,13 +336,18 @@ const init = async () => {
 						costs['min2'] = event.child_age_min2;
 						costs['max2'] = event.child_age_max2;
 						const data = {
-							"admin":request.auth.isAuthenticated,
 							"path":`/events/registration`,
 							"method":"POST",
 							"event_id":request.params.event_id,
 							"payment":JSON.stringify(event.payment),
 							"costs":JSON.stringify(costs)
 						};
+						if(request.auth.credentials !== null && request.auth.credentials.scope.length > 0){
+							const credentials = request.auth.credentials.scope;
+							credentials.forEach((cred) => {
+								data[cred + "_admin"] = cred;
+							}); 
+						}
 						data["redirect"] = `~events~register~${request.params.event_id}`;
 						return h.view(`events_reg`,data);
 					}
@@ -336,7 +367,12 @@ const init = async () => {
 							const contact = JSON.parse(payload);
 							let data = {};
 							contact[0].family['costs'] = request.payload.costs;
-							data['admin'] = request.auth.isAuthenticated;
+							if(request.auth.credentials !== null && request.auth.credentials.scope.length > 0){
+								const credentials = request.auth.credentials.scope;
+								credentials.forEach((cred) => {
+									data[cred + "_admin"] = cred;
+								}); 
+							}
 							data['email'] = request.payload.contact_email;
 							data['event_id'] = request.payload.event_id;
 							data['contact'] = contact;
@@ -444,7 +480,12 @@ const init = async () => {
 					handler: async (request,h) => {
 						
 						let data = {};
-						data["admin"] = request.auth.isAuthenticated;
+						if(request.auth.credentials !== null && request.auth.credentials.scope.length > 0){
+							const credentials = request.auth.credentials.scope;
+							credentials.forEach((cred) => {
+								data[cred + "_admin"] = cred;
+							}); 
+						}
 						const field = request.params.field;
 						const direction = request.params.direction;
 						const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/event/list/${field}/${direction}`);
@@ -466,10 +507,15 @@ const init = async () => {
 						if (!request.auth.isAuthenticated) {
 					        return h.redirect('/login');
 					    }
-						const pay = {"path":"/event/save"};
-						pay["admin"] = request.auth.isAuthenticated;
-						pay["redirect"] = "~events~admin~event";
-						return h.view('eventbuild',pay);
+						const data = {"path":"/event/save"};
+						if(request.auth.credentials !== null && request.auth.credentials.scope.length > 0){
+							const credentials = request.auth.credentials.scope;
+							credentials.forEach((cred) => {
+								data[cred + "_admin"] = cred;
+							}); 
+						}
+						data["redirect"] = "~events~admin~event";
+						return h.view('eventbuild',data);
 					}
 				}
 			},
@@ -486,11 +532,16 @@ const init = async () => {
 					        return h.redirect('/login');
 					    }
 						const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/event/${request.params.id}`);
-						const pay = JSON.parse(payload);
-						pay.path = "/event/update";
-						pay["admin"] = request.auth.isAuthenticated;
-						pay["redirect"] = `~events~admin~event~${request.params.id}`;
-						return h.view('eventbuild',pay);
+						const data = JSON.parse(payload);
+						data["path"] = "/event/update";
+						if(request.auth.credentials !== null && request.auth.credentials.scope.length > 0){
+							const credentials = request.auth.credentials.scope;
+							credentials.forEach((cred) => {
+								data[cred + "_admin"] = cred;
+							}); 
+						}
+						data["redirect"] = `~events~admin~event~${request.params.id}`;
+						return h.view('eventbuild',data);
 					}
 				}
 			},
@@ -525,7 +576,13 @@ const init = async () => {
       					strategy: 'session'
 					},
 					handler:(request,h) => {
-						const data = {'redirect':request.query.redirect};
+						const data = {};
+						if(request.auth.credentials !== null && request.auth.credentials.scope.length > 0){
+							const credentials = request.auth.credentials.scope;
+							credentials.forEach((cred) => {
+								data[cred + "_admin"] = cred;
+							}); 
+						}
 						return h.view('login',data);
 					}
 				}
@@ -626,7 +683,12 @@ const init = async () => {
 					handler: async (request,h) => {
 						const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/contact/list`);
 						const data = {};
-						data['admin'] = request.auth.isAuthenticated;
+						if(request.auth.credentials !== null && request.auth.credentials.scope.length > 0){
+							const credentials = request.auth.credentials.scope;
+							credentials.forEach((cred) => {
+								data[cred + "_admin"] = cred;
+							}); 
+						}
 						data['contacts'] = JSON.parse(payload);
 						return h.view('contact_management',data);
 					}

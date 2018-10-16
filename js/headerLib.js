@@ -45,6 +45,8 @@ $("#mm .item86").on('touchstart click',() => {window.location = 'http://www.cubs
 $("#mm .item87").on('touchstart click',() => {window.location = '/events/admin/list/event_date/1'});
 
 $("#mm .item88").on('touchstart click',() => {window.location = '/events/admin/list/event_date/1'});
+
+$("#mm .item89").on('touchstart click',() => {window.location = '/contacts/admin'});
 // function addCarousel() {
 // //Create a carousel that rotates a new panel ever 5secs\
 //   $('.carousel').slick({
