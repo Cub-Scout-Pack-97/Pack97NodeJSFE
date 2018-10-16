@@ -66,7 +66,7 @@ const init = async () => {
 	        password: 'CnBEYC2EWb9WffbEofjG6Js0aIJZN1hO',
 	        cookie: 'scout_code',
 	     	keepAlive: true,
-	     	ttl: 30 * 60000, //30 minutes
+	     	ttl: 90 * 60000, //30 minutes
 	        isSecure: false,
 	        clearInvalid: true,
 	        validateFunc: async (request, session) => {
@@ -83,50 +83,86 @@ const init = async () => {
 	            return out;
 	        }
 	    });
-	//server.auth.default('session');
+	
 	
 	server.route([
 			{
 				/** Functions -----------------------------------------*/
 				method:'GET',
 				path:'/images/{images}',
-				handler:(request,h)=>{
-					return h.file(`./images/${request.params.images}`);
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler:(request,h)=>{
+						return h.file(`./images/${request.params.images}`);
+					}
 				}
 			},
 			{
 				method:'GET',
 				path:'/images/events/{images}',
-				handler:(request,h)=>{
-					return h.file(`./images/events/${request.params.images}`);
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler:(request,h)=>{
+						return h.file(`./images/events/${request.params.images}`);
+					}
 				}
 			},
 			{
 				method:'GET',
 				path:'/css/{css}',
-				handler:(request,h)=>{
-					return h.file(`./css/${request.params.css}`);
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler:(request,h)=>{
+						return h.file(`./css/${request.params.css}`);
+					}
 				}
 			},
 			{
 				method:'GET',
 				path:'/slick/{slick}',
-				handler:(request,h)=>{
-					return h.file(`./slick/${request.params.slick}`);
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler:(request,h)=>{
+						return h.file(`./slick/${request.params.slick}`);
+					}
 				}
 			},
 			{
 				method:'GET',
 				path:'/slick/fonts/{slick}',
-				handler:(request,h)=>{
-					return h.file(`./slick/fonts/${request.params.slick}`);
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler:(request,h)=>{
+						return h.file(`./slick/fonts/${request.params.slick}`);
+					}
 				}
 			},
 			{
 				method:'GET',
 				path:'/js/{js}',
-				handler:(request,h)=>{
-					return h.file(`./js/${request.params.js}`);
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler:(request,h)=>{
+						return h.file(`./js/${request.params.js}`);
+					}
 				}
 			},
 			{
@@ -135,13 +171,14 @@ const init = async () => {
 				path:"/",
 				config: {
 					auth: {
-						mode: 'try',
+						mode:'try',
       					strategy: 'session'
 					},
 					handler: async (request,h) => {
 						const {res,payload} = await Wreck.get('http://10.5.0.7:4477/api/pack97/event/list/event_date/1');
 						const events = JSON.parse(payload);
 						const data = {};
+						console.log(request.auth);
 					    data["admin"] = request.auth.isAuthenticated;
 					    data["redirect"] = "~";
 						data["events"] = events;
@@ -155,7 +192,7 @@ const init = async () => {
 				path:"/program",
 				config: {
 					auth: {
-						mode: 'try',
+						mode:'try',
       					strategy: 'session'
 					},
 					handler: (request,h) => {
@@ -171,7 +208,7 @@ const init = async () => {
 				path:"/leaders",
 				config: {
 					auth: {
-						mode: 'try',
+						mode:'try',
       					strategy: 'session'
 					},
 					handler: async (request,h) => {
@@ -198,7 +235,7 @@ const init = async () => {
 				path:"/committee",
 				config: {
 					auth: {
-						mode: 'try',
+						mode:'try',
       					strategy: 'session'
 					},
 					handler: async (request,h) => {
@@ -225,7 +262,7 @@ const init = async () => {
 				path:"/events",
 				config: {
 					auth: {
-						mode: 'try',
+						mode:'try',
       					strategy: 'session'
 					},
 					handler: async (request,h) => {
@@ -257,7 +294,7 @@ const init = async () => {
 				path:'/events/register/{event_id}',
 				config: {
 					auth: {
-						mode: 'try',
+						mode:'try',
       					strategy: 'session'
 					},
 					handler: async (request,h) => {
@@ -291,7 +328,7 @@ const init = async () => {
 				path:'/events/registration',
 				config: {
 					auth: {
-						mode: 'try',
+						mode:'try',
       					strategy: 'session'
 					},
 					handler: async (request,h) => {
@@ -318,29 +355,41 @@ const init = async () => {
 			{
 				method:'POST',
 				path:'/events/register/attendee',
-				handler: async (request,h) => {
-					const wreck = await Wreck.post('http://10.5.0.7:4477/api/pack97/event/add/attendees', { payload: request.payload }, (err, res, payload) => {
-					    console.log(`Error ${err}`)
-					});
-					return h.redirect('/events');
-					
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler: async (request,h) => {
+						const wreck = await Wreck.post('http://10.5.0.7:4477/api/pack97/event/add/attendees', { payload: request.payload }, (err, res, payload) => {
+						    console.log(`Error ${err}`)
+						});
+						return h.redirect('/events');
+						
+					}
 				}
 			},
 			{
 				method:'POST',
 				path:'/event/save',
-				handler: async (request,h) => {
-					let payload = request.payload;
-					payload.enabled = checkToBoolean(request.payload.enabled);
-					payload.visible = checkToBoolean(request.payload.visible);
-					payload.lead_notify = checkToBoolean(request.payload.lead_notify);
-					payload.backpacking = checkToBoolean(request.payload.backpacking);
-					payload.tshirt = checkToBoolean(request.payload.tshirt);
-					
-					const wreck = await Wreck.post('http://10.5.0.7:4477/api/pack97/event/new', { payload: request.payload }, (err, res, payload) => {
-					    console.log(`Error ${err}`)
-					});
-					return h.redirect('/events/admin/list/event_date/1');
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler: async (request,h) => {
+						let payload = request.payload;
+						payload.enabled = checkToBoolean(request.payload.enabled);
+						payload.visible = checkToBoolean(request.payload.visible);
+						payload.lead_notify = checkToBoolean(request.payload.lead_notify);
+						payload.backpacking = checkToBoolean(request.payload.backpacking);
+						payload.tshirt = checkToBoolean(request.payload.tshirt);
+						
+						const wreck = await Wreck.post('http://10.5.0.7:4477/api/pack97/event/new', { payload: request.payload }, (err, res, payload) => {
+						    console.log(`Error ${err}`)
+						});
+						return h.redirect('/events/admin/list/event_date/1');
+					}
 				}
 			},
 			{
@@ -348,7 +397,7 @@ const init = async () => {
 				path: '/events/add/family',
 				config: {
 					auth: {
-						mode: 'try',
+						mode:'try',
       					strategy: 'session'
 					},
 					handler: async (request,h) => {
@@ -390,12 +439,11 @@ const init = async () => {
 				path:'/events/admin/list/{field}/{direction}',
 				config: {
 					auth: {
-						mode: 'try',
       					strategy: 'session',
       					scope: "events"
 					},
 					handler: async (request,h) => {
-						console.log(request.auth);
+						
 						let data = {};
 						data["admin"] = request.auth.isAuthenticated;
 						const field = request.params.field;
@@ -412,7 +460,6 @@ const init = async () => {
 				path:'/events/admin/event',
 				config: {
 					auth: {
-						mode: 'try',
       					strategy: 'session',
       					scope: "events"
 					},
@@ -432,7 +479,6 @@ const init = async () => {
 				path:'/events/admin/event/{id}',
 				config: {
 					auth: {
-						mode: 'try',
       					strategy: 'session',
       					scope: "events"
 					},
@@ -454,7 +500,6 @@ const init = async () => {
 				path:'/event/update',
 				config: {
 					auth: {
-						mode: 'try',
       					strategy: 'session',
       					scope: "events"
 					},
@@ -475,71 +520,106 @@ const init = async () => {
 			{
 				method:"GET",
 				path:"/login",
-				handler:(request,h) => {
-					const data = {'redirect':request.query.redirect};
-					return h.view('login',data);
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler:(request,h) => {
+						const data = {'redirect':request.query.redirect};
+						return h.view('login',data);
+					}
 				}
 			},
 			{
 				method:"POST",
 				path:"/login",
-				handler: async (request,h) => {
-					if (!request.auth.isAuthenticated) {
-				        request.cookieAuth.clear()
-				    }
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler: async (request,h) => {
+						if (!request.auth.isAuthenticated) {
+					        request.cookieAuth.clear()
+					    }
+					    
+						let data = {};
+						data["email"] = request.payload.username;
+						data["password"] = request.payload.password;
 
-					let data = {};
-					data["email"] = request.payload.username;
-					data["password"] = request.payload.password;
+						const {res,payload} = await Wreck.post('http://10.5.0.7:4477/api/pack97/user/validation',{payload: data}, (err, res, payload) => {
+						    console.log(`Error ${err}`)
+						});
+						const response = JSON.parse(payload);
+						if (response.response === 'success'){
+							const sid = String(++uuid);
+							await request.server.app.cache.set(sid, { response }, 0);
+							request.cookieAuth.set({ sid });
+							request.cookieAuth.set("scope",response.scope);
+							//request.cookieAuth.set(response);
+							let redirect = request.payload.redirect;
+							if(redirect === undefined || redirect === null || redirect === ""){
+								redirect = "/";
+							}
+							
+							server.auth.default({
+							  strategy: 'session',
+							  scope: response.scope
+							});
+							return h.redirect(tildaToSlash(redirect));
 
-					const {res,payload} = await Wreck.post('http://10.5.0.7:4477/api/pack97/user/validation',{payload: data}, (err, res, payload) => {
-					    console.log(`Error ${err}`)
-					});
-					const response = JSON.parse(payload);
-					if (response.response === 'success'){
-						const sid = String(++uuid);
-						await request.server.app.cache.set(sid, { response }, 0);
-						request.cookieAuth.set({ sid });
-						request.auth.credentials = response.scope;
-
-						//request.cookieAuth.set(response);
-						let redirect = request.payload.redirect;
-						if(redirect === undefined || redirect === null || redirect === ""){
-							redirect = "/";
+						}else{
+							return h.view('login',response);
 						}
-						return h.redirect(tildaToSlash(redirect));
-					}else{
-						return h.view('login',response);
 					}
 				}
 			},
 			{
 				method:"GET",
 				path:"/logout",
-				handler: async (request,h) =>{
-					request.cookieAuth.clear()
-					return h.redirect('/login');
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler: async (request,h) =>{
+						request.cookieAuth.clear()
+						return h.redirect('/login');
+					}
 				}
 			},
 			{
 				method:"GET",
 				path:"/forgotpassword",
-				handler: (request,h) => {
-					return h.view('forgotpassword');
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler: (request,h) => {
+						return h.view('forgotpassword');
+					}
 				}
 			},
 			{
 				method:"POST",
 				path:"/forgotpassword",
-				handler: async (request,h) => {
-					const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/contact/email/${request.payload.username}`);
-					const data = JSON.parse(payload);
-					if(data.length > 0){
-						data["response"] = "An email has been sent with instructions on resetting your password";
-					}else{
-						data["response"] = "Sorry, we don't have your email as a username";
+				config: {
+					auth: {
+						mode: 'try',
+      					strategy: 'session'
+					},
+					handler: async (request,h) => {
+						const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/contact/email/${request.payload.username}`);
+						const data = JSON.parse(payload);
+						if(data.length > 0){
+							data["response"] = "An email has been sent with instructions on resetting your password";
+						}else{
+							data["response"] = "Sorry, we don't have your email as a username";
+						}
+						return h.view('forgotpassword',data);
 					}
-					return h.view('forgotpassword',data);
 				}
 			},
 			{
@@ -547,7 +627,6 @@ const init = async () => {
 				path:"/contacts/admin",
 				config: {
 					auth: {
-						mode: 'try',
       					strategy: 'session',
       					scope: "contacts"
 					},
