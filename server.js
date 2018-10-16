@@ -178,7 +178,6 @@ const init = async () => {
 						const {res,payload} = await Wreck.get('http://10.5.0.7:4477/api/pack97/event/list/event_date/1');
 						const events = JSON.parse(payload);
 						const data = {};
-						console.log(request.auth);
 					    data["admin"] = request.auth.isAuthenticated;
 					    data["redirect"] = "~";
 						data["events"] = events;
@@ -557,16 +556,10 @@ const init = async () => {
 							await request.server.app.cache.set(sid, { response }, 0);
 							request.cookieAuth.set({ sid });
 							request.cookieAuth.set("scope",response.scope);
-							//request.cookieAuth.set(response);
 							let redirect = request.payload.redirect;
 							if(redirect === undefined || redirect === null || redirect === ""){
 								redirect = "/";
 							}
-							
-							server.auth.default({
-							  strategy: 'session',
-							  scope: response.scope
-							});
 							return h.redirect(tildaToSlash(redirect));
 
 						}else{
