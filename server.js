@@ -10,13 +10,6 @@ const server = new Hapi.Server({
 
 let uuid = 1;
 
-function checkToBoolean(checkbox){
-	let bool = false;
-	if (checkbox === 'on'){
-		bool = true;
-	}
-	return bool;
-}
 function locationHREF(location){
 	let address = location.replace(/ /g,"+");
 	address = address.replace(/,/g,"%2C");
@@ -24,6 +17,13 @@ function locationHREF(location){
 }
 function tildaToSlash(str){
 	return str.replace(/~/g,'/');
+}
+function onToBoolen(value){
+	if(value === 'on'){
+		return true;
+	}else{
+		return false;
+	}
 }
 
 async function startVision() {
@@ -414,11 +414,11 @@ const init = async () => {
 					},
 					handler: async (request,h) => {
 						let payload = request.payload;
-						payload.enabled = checkToBoolean(request.payload.enabled);
-						payload.visible = checkToBoolean(request.payload.visible);
-						payload.lead_notify = checkToBoolean(request.payload.lead_notify);
-						payload.backpacking = checkToBoolean(request.payload.backpacking);
-						payload.tshirt = checkToBoolean(request.payload.tshirt);
+						payload.enabled = onToBoolean(request.payload.enabled);
+						payload.visible = onToBoolean(request.payload.visible);
+						payload.lead_notify = onToBoolean(request.payload.lead_notify);
+						payload.backpacking = onToBoolean(request.payload.backpacking);
+						payload.tshirt = onToBoolean(request.payload.tshirt);
 						
 						const wreck = await Wreck.post('http://10.5.0.7:4477/api/pack97/event/new', { payload: request.payload }, (err, res, payload) => {
 						    console.log(`Error ${err}`)
@@ -555,11 +555,11 @@ const init = async () => {
 					},
 					handler: async(request,h) => {
 						let payload = request.payload;
-						payload.enabled = checkToBoolean(request.payload.enabled);
-						payload.visible = checkToBoolean(request.payload.visible);
-						payload.lead_notify = checkToBoolean(request.payload.lead_notify);
-						payload.backpacking = checkToBoolean(request.payload.backpacking);
-						payload.tshirt = checkToBoolean(request.payload.tshirt);
+						payload.enabled = onToBoolean(request.payload.enabled);
+						payload.visible = onToBoolean(request.payload.visible);
+						payload.lead_notify = onToBoolean(request.payload.lead_notify);
+						payload.backpacking = onToBoolean(request.payload.backpacking);
+						payload.tshirt = onToBoolean(request.payload.tshirt);
 						const wreck = await Wreck.post('http://10.5.0.7:4477/api/pack97/event/update', { payload: payload }, (err, res, payload) => {
 						    console.log(`Error ${err}`)
 						});
@@ -677,8 +677,9 @@ const init = async () => {
 				path:"/contacts/admin",
 				config: {
 					auth: {
+						mode:'try',
       					strategy: 'session',
-      					scope: "contacts"
+      					// scope: "contacts"
 					},
 					handler: async (request,h) => {
 						const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/contact/list`);
@@ -691,6 +692,126 @@ const init = async () => {
 						}
 						data['contacts'] = JSON.parse(payload);
 						return h.view('contact_management',data);
+					}
+				}
+			},
+			{
+				method:"GET",
+				path:"/contacts/admin/edit",
+				config: {
+					auth: {
+						mode:'try',
+      					strategy: 'session',
+      					// scope: "contacts"
+					},
+					handler: async (request,h) => {
+						let data = {};
+						if(request.query.id !== undefined){
+							const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/contact/id/${request.query.id}`);
+							if(request.auth.credentials !== null && request.auth.credentials.scope.length > 0){
+								const credentials = request.auth.credentials.scope;
+								credentials.forEach((cred) => {
+									data[cred + "_admin"] = cred;
+								}); 
+							}
+							data['contact'] = JSON.parse(payload);
+						}else{
+							data = {
+								"contact":{
+									"scope":[]
+								}
+							}
+						}
+						return h.view('contact_edit',data);
+					}
+				}
+			},
+			{
+				method:"POST",
+				path:"/contact/admin/update",
+				config: {
+					auth: {
+						mode:'try',
+      					strategy: 'session',
+      					// scope: "contacts"
+					},
+					handler: async (request,h) => {
+						let data = request.payload;
+						let scope = [];
+						data.isCommitee = onToBoolen(data.isCommitee);
+						data.isLeader = onToBoolen(data.isLeader);
+						data.isUser = onToBoolen(data.isUser);
+						if (data.events_admin === 'on'){
+							scope.push('events');
+						}
+						if (data.hikes_admin === 'on'){
+							scope.push('hikes');
+						}
+						if (data.contacts_admin === 'on'){
+							scope.push('contacts');
+						}
+						data.events_admin = undefined;
+						data.hikes_admin = undefined;
+						data.contacts_admin = undefined;
+						data.scope = scope;
+
+						let update = '/update';
+						if(data._id.length < 1){
+							update = '';
+						}
+
+						const {res,payload} = await Wreck.post(`http://10.5.0.7:4477/api/pack97/contact${update}`,{payload: data}, (err, res, payload) => {
+						    console.log(`Error ${err}`)
+						});
+
+						if(data.isUser && onToBoolen(data.isUserChanged)){
+							const payload = {
+								"to": data.email,
+								"scope": scope,
+								"_id": data._id
+							};
+							const wreck = await Wreck.post('http://10.5.0.9:7777/campaign/newuser', { payload: payload }, (err, res, payload) => {
+							    console.log(`Error ${err}`)
+							});
+						}
+						
+						
+						return h.redirect('/contacts/admin');
+					}
+				}
+			},
+			{
+				method:"GET",
+				path: "/contact/admin/newpassword/{_id}",
+				config: {
+					auth: {
+						mode:'try',
+      					strategy: 'session'
+					},
+					handler: async (request,h) => {
+						const data = {"_id":request.params._id};
+						return h.view("change_pass",data);
+					}
+				}
+			},
+			{
+				method:"POST",
+				path:"/contact/admin/newpass",
+				config: {
+					auth: {
+						mode:'try',
+      					strategy: 'session'
+					},
+					handler: async (request,h) => {
+						const data = {
+							'_id' :request.payload._id,
+							'email': request.payload.email,
+							'password': request.payload.password
+						}
+						const {res,payload} = await Wreck.post('http://10.5.0.7:4477/api/pack97/password/new',{payload: data}, (err, res, payload) => {
+						    console.log(`Error ${err}`)
+						});
+						return h.redirect("/login");
 					}
 				}
 			}
