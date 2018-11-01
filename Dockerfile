@@ -15,9 +15,6 @@ RUN git clone https://github.com/johnkelley4477/Pack97NodeJSFE.git
 ## Create Working Dir
 WORKDIR /Pack97NodeJSFE
 
-## Checkout develop branch
-RUN git checkout develop
-
 ## Delete GIT
 RUN apk del git
 
