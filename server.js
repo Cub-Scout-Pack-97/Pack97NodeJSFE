@@ -664,6 +664,14 @@ const init = async () => {
 						const {res,payload} = await Wreck.get(`http://10.5.0.7:4477/api/pack97/contact/email/${request.payload.username}`);
 						const data = JSON.parse(payload);
 						if(data.length > 0){
+							const payload = {
+								"to": data[0].email,
+								"scope": data[0].scope,
+								"_id": data[0]._id
+							};
+							const wreck = await Wreck.post('http://10.5.0.9:7777/campaign/passreset', { payload: payload }, (err, res, payload) => {
+							    console.log(`Error ${err}`)
+							});
 							data["response"] = "An email has been sent with instructions on resetting your password";
 						}else{
 							data["response"] = "Sorry, we don't have your email as a username";
@@ -811,6 +819,7 @@ const init = async () => {
 						const {res,payload} = await Wreck.post('http://10.5.0.7:4477/api/pack97/password/new',{payload: data}, (err, res, payload) => {
 						    console.log(`Error ${err}`)
 						});
+						console.log(JSON.parse(payload));
 						return h.redirect("/login");
 					}
 				}
