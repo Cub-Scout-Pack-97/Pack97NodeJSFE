@@ -1,0 +1,36 @@
+<div class="grid25 floatRight">
+	<div id="function_buttons">
+		<a href="/events/admin/event" class="btn">New Event</a>
+		<input type="button" id="sortdate" class="btn" value="Sort by Date">
+		<input type="button" id="sortname" class="btn" value="Sort by Name">
+	</div>
+</div>
+<div class="grid75">
+	{{#each events}}
+		<div class="events">
+			<div>
+				<a class="event_title" href="events#{{_id}}">{{event_name}}</a>
+				<div class="event_actions floatRight">
+					<input type="button" class="btn" value="Metrics" onclick="showhide('#metrics_{{_id}}')">
+					<a href="/events/admin/event/{{_id}}" class="btn">Edit</a>
+				</div>
+			</div>
+			<div class="event_dates">
+				<label>Event Date: </label><span>{{#formatdate event_date}}{{@formatteddate}}{{/formatdate}}</span>
+				<label>Registration Closing: </label><span>{{#formatdate reg_close}}{{@formatteddate}}{{/formatdate}}</span>
+			</div>
+			<div id="metrics_{{_id}}" class="metrics hide">
+				{{#eventmetrics participants}}
+					<div><label>Scouts:</label> {{@scouts}}</div>
+					<div><label>Leaders:</label> {{@leaders}}</div>
+					<div><label>Adults:</label> {{@adults}}</div>
+					<div><label>Children:</label> {{@other}}</div>
+					<div><label>Males:</label> {{@males}}</div>
+					<div><label>Females:</label> {{@females}}</div>
+				{{/eventmetrics}}
+			</div>	
+		</div>
+	{{/each}}
+</div>
+<link rel="stylesheet" type="text/css" href="/css/event_reg.css">
+<script type="text/javascript" src="/js/events.js"></script>

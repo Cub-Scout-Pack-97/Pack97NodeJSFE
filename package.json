@@ -17,12 +17,16 @@
   },
   "homepage": "https://github.com/johnkelley4477/Pack97NodeJSFE#readme",
   "dependencies": {
-    "firebase": "^5.0.2",
-    "handlebars": "4.0.4",
-    "hapi": "11.1.0",
-    "inert": "3.2.0",
+    "fs": "0.0.1-security",
+    "gmail-send": "^1.2.14",
+    "handlebars": "^4.0.12",
+    "hapi": "^17.0.1",
+    "hapi-auth-cookie": "^9.0.0",
+    "inert": "^5.0.0",
     "lodash": "^4.17.4",
+    "nodemon": "^1.18.3",
     "path": "^0.12.7",
-    "vision": "4.0.1"
+    "vision": "^5.1.0",
+    "wreck": "^14.1.0"
   }
 }

@@ -1,0 +1,59 @@
+<form action="{{path}}" method='{{method}}'>
+	
+	<div id="email_container" >
+		<input type="email" name="contact_email" id="email" value='{{email}}' placeholder="Your Email">
+	</div>
+	<h3 class="error">{{{error}}}</h3>
+	<input type="input" name="event_id" id="event_id" value='{{event_id}}' class="hide">
+	<input type="input" name="costs" value="{{costs}}" class="hide">
+	<input type="input" name="payment" value="{{payment}}" class="hide">
+	<div id="attendees">
+		{{#each contact}}
+			<div class="horCenter" id="contact_name">
+				<input type="input" name="contact_id" value="{{_id}}" class="hide">
+				<span class="title">Welcome back</span>
+				<div class="contact_name">
+					<span class="title">{{#titlecase first_name}}{{/titlecase}}</span>
+					<span class="title">{{#titlecase last_name}}{{/titlecase}}</span>
+				</div>
+				<input type="input" name="contact_first_name" value="{{#titlecase first_name}}{{/titlecase}}" class="hide" >
+				<input type="input" name="contact_last_name" value="{{#titlecase last_name}}{{/titlecase}}" class="hide" > 
+				<input type="input" name="contact_phone" value="{{phone}}" class="hide">
+				<div class="list_title center">Select anyone attending</div>
+			</div>
+			<div class="grid66 floatLeft">	
+				
+				{{#getattendees family}}
+					{{>attendees @attendee}}
+				{{/getattendees}}
+				<input type="button" id="showNewAttendee" value="Add a new person"  class="btn">	
+			</div>
+			<div id="total_container" class="grid33 hide floatRight">
+				<div id="total_child">
+					<div class="grid50 floatLeft font1_5">
+						<h3 class="mt15">Total</h3>
+						<span class="dollar">$</span><span id="total"></span>
+					</div>
+					<div class="grid50 floatRight">
+						<label class="ml15">Online Payment</label>
+						<a href="{{payment}}" target="_blank">
+							<img src="http://www.cubscoutpack97.org/images/square_logo.png" class="payment" width="150" height="100">
+						</a>
+					</div>
+				</div>
+			</div>
+		{{/each}}
+		<div id="add_contact_parent">
+			<input type="submit" class="btn clearBoth horCenter" id="add_contact">
+		</div>
+	</div>
+	
+
+
+</form>
+<div id="newAttendee" class="modal" style="display:none;">
+	{{>newAttendee}}
+</div>
+<link rel="stylesheet" type="text/css" href="/css/event_reg.css">
+<script type="text/javascript" src="/js/events.js"></script>
+<div class="clearBoth"></div>

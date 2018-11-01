@@ -1,12 +1,12 @@
 <div class="contact_container">
 	<div class="contact_info">
-		<span class="name contact">{{contact_name}}</span>
+		<span class="name contact">{{contact_first_name}} {{contact_last_name}}</span>
 		<div class="reg_contact_info">
 			<!-- if admin true -->
 			<a href="tel:{{contact_phone}}">{{contact_phone}}</a>
 			<a href="{{contact_email}}">email</a>
 		</div>
-		<span class="pointer" onclick="TogglePaid(2414, 1)">
+		<span class="pointer" >
 			{{#if verified}}
 				Verified
 			{{else}}
@@ -15,20 +15,31 @@
 		</span>
 	</div>
 	<div class="participants_card">
-		<b>Scouts</b>
 			{{#getscouts attendees}}
+				{{#with @scout}}
+					<b>Scouts</b>
+				{{/with}}
 				{{>participant_info @scout}}
 			{{/getscouts}}
-		<b>Leader</b>
+		
 			{{#getleaders attendees}}
+				{{#with @leader}}
+					<b>Leader</b>
+				{{/with}}
 				{{>participant_info @leader}}
 			{{/getleaders}}
-		<b>Adults</b>
+		
 			{{#getadults attendees}}
+				{{#with @adult}}
+					<b>Adults</b>
+				{{/with}}
 				{{>participant_info @adult}}
 			{{/getadults}}
-		<b>Other</b>
+		
 			{{#getothers attendees}}
+				{{#with @other}}
+					<b>Children</b>
+				{{/with}}
 				{{>participant_info @other}}
 			{{/getothers}}
 	</div>

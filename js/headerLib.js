@@ -42,6 +42,11 @@ $("#mm .item83").on('touchstart click',() => {window.location = 'http://www.cubs
 //bind Multimedia Gallery menu buttons
 $("#mm .item86").on('touchstart click',() => {window.location = 'http://www.cubscoutpack97.org/index.php?option=com_content&amp;view=article&amp;id=140&amp;Itemid=86'});
 	
+$("#mm .item87").on('touchstart click',() => {window.location = '/events/admin/list/event_date/1'});
+
+$("#mm .item88").on('touchstart click',() => {window.location = '/events/admin/list/event_date/1'});
+
+$("#mm .item89").on('touchstart click',() => {window.location = '/contacts/admin'});
 // function addCarousel() {
 // //Create a carousel that rotates a new panel ever 5secs\
 //   $('.carousel').slick({
@@ -65,6 +70,3 @@ $(window).scroll(function () {
     }
     iScrollPos = iCurScrollPos;
 });
-
-
-

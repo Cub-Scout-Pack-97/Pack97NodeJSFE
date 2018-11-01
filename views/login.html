@@ -1,0 +1,11 @@
+<form method="POST" action="/login">
+	<p class="error">{{response}}</p>
+	<input type="text" name="redirect" class="hide" value={{redirect}}>
+	<div class="horCenter login_form">
+		<input type="input" name="username" class="grid100" placeholder="Username">
+		<input type="password" name="password" class="grid100" placeholder="Password">
+		<a href="/forgotpassword">I forgot my password</a>
+		<input type="submit" class="btn horCenter" value="Login">
+	</div>
+	<!-- <input id="new_account" class="btn horCenter" value="Create an Account"> -->
+</form>

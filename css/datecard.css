@@ -12,21 +12,37 @@ h3.title{
 }
 .card_container{
 	background-color: white;
-	/*width: 300px;*/
+	width: 600px;
 	text-align: center;
 	margin: 10px;
+    margin-top: 20px;
 	min-width: 300px;
+    cursor: pointer;
+}
+#events_home {
+    min-width: 350px;
+    margin: auto;
+    width: 900px;
+    margin-bottom: 40px;
+}
+.card_dates {
+    background-color: rgba(0,0,0,0.5);
+    width: 200px;
+    margin: auto;
+    padding: 40px 0px;
 }
 .card_date{
 	background: #002266;
 	color: white;
 	font-size: 30px;
-	padding: 30px 10px;
 	font-family: sans-serif;
+    background-position-y: center;
+    background-size: cover;
 }
 .card_info{
 	border: 1px solid #000000; 
 	padding: 10px;
+    height: 300px;
 }
 .w100{
 	width:100%;
@@ -87,10 +103,6 @@ span.name {
 .participants_card {
     margin: 20px 60px 0px 60px;
 }
-span.name.contact {
-    font-size: 18pt;
-    color: #ff0;
-}
 .contact.even {
     background-color: #fff;
 }
@@ -103,12 +115,14 @@ span.name.contact {
 .odd {
     color: #fff;
 }
-
 .even a {
     color: #000;
 }
 .odd a {
     color: #fff;
+}
+.mb20{
+    margin-bottom: 20px;
 }
 .reg_contact_info {
     text-align: center;
@@ -119,10 +133,8 @@ span.pointer {
     margin-right: 10px;
 }
 span.name.contact {
-    color: #ff0;
     font-weight: bold;
     font-size: 18pt;
-    text-shadow: 0 0 2px #026;
 }
 .contact {
     padding: 3px;
@@ -139,7 +151,5 @@ span.name.contact {
 }
 .participants {
     display: none;
-    margin-top: 20px;
-    margin-left: -10px;
-    margin-right: -10px;
+    border: 1px solid #000000;
 }

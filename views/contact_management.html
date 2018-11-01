@@ -1,0 +1,51 @@
+<link rel="stylesheet" type="text/css" href="/css/contact.css">
+<div>
+	{{#each contacts}}
+		<div class="contact grid100 clearBoth">
+			<h3 class="grid25 inline_block  m10 center">{{first_name}} {{last_name}}</h3>
+			<div class="grid25 inline_block  m10 center">{{title}}</div>
+			<div class="grid25 inline_block  m10 center">{{email}}</div>
+			<a class="grid25" href="/contacts/admin/edit?id={{_id}}">edit</a>
+			<div class="contact_details hide">
+				<div class="desc">
+					<label for="desc">Description</label>
+					<span id="desc">{{desc}}</span>
+				</div>
+				<div>
+					<label for="bsaid">BSA ID</label>
+					<span id="bsaid">{{bsaid}}</span>
+				</div>
+				<div>
+					<label for="phone">Phone</label>
+					<span id="phone">{{phone}}</span>
+				</div>
+				<div>
+					<label for="gender">Gender</label>
+					<span id="gender">{{gender}}</span>
+				</div>
+				<div class="roles">
+					<label>Roles</label>
+					{{#if isCommitee}}
+						<span class="badge">Commitee</span>
+					{{/if}}
+					{{#if isLeader}}
+						<span class="badge">Den Leader</span>
+					{{/if}}
+				</div>
+				{{#if isUser}}
+					<div class="scope">
+						<label>Admin Rights</label>
+						{{#each scope}}
+							<span class="badge">{{@this}}</span>
+						{{else}}
+							<span class="badge">None</span>
+						{{/each}}
+					</div>
+				{{/if}}
+			</div>
+		</div>
+		
+	{{/each}}
+	<a href="/contacts/admin/edit" class="btn newuser">New User</a>
+</div>
+<script type="text/javascript" src="/js/contacts.js"></script>

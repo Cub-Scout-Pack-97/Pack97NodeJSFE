@@ -1,5 +1,5 @@
 <footer>
-	<div>
+	<div class="inner_foot">
 		<div class="footer_grid33">
 			<h3 style="text-align: center;">Pay Dues Online</h3>
 			<p class="grid100">
@@ -29,6 +29,13 @@
 					</li>
 					<li class="m10 font15">
 						<a href="http://www.cdccos.info/" target="_blank">Charlotte Diocese Catholic Committee on Scouting</a>
+					</li>
+					<li class="m10 font15">
+						{{#if admin}}
+							<a href="/logout">Logout</a>
+						{{else}}
+							<a href="/login?redirect={{{redirect}}}">Login</a>
+						{{/if}}
 					</li>
 					<!-- Admin link here -->	
 				</ul>					

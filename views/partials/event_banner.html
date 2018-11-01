@@ -1,13 +1,15 @@
-<div class="banner_conntainer">
-	<h2 class="contentheading">{{event_name}}</h2>
-<!-- if(strcmp($reg_close, '1969-12-31') > 0){ -->
-	<h3 class="datetime">{{event_date}}
-		<div class="reg_close_date">Registration closes at the end of s{{reg_close}}</div>
-	</h3>
-	<div class="banner_image" style="background-image:url(&#39;http://www.cubscoutpack97.org/images/{{event_id}}.png&#39;),url(&#39;http://www.cubscoutpack97.org/images/defualtbannerimage.png&#39;);">
-		<div class="banner_text">
-			<p class="font_larger">{{event_desc}}</p>
-			<a class="font_larger" href="/events/events_home.php">Learn More</a>
+{{#if enabled}}
+	<div class="banner_conntainer pointer">
+		<input type="input" id="id" class="hide" value="{{_id}}">
+		<div class="banner_image" style="background-image:url({{select_image}}),url(&#39;http://www.cubscoutpack97.org/images/defualtbannerimage.png&#39;);">
+			<div class="banner_text">
+				<h2 class="contentheading">{{event_name}}</h2>
+				<h3 class="datetime">{{#formatdate event_date}}{{@formatteddate}}{{/formatdate}}
+					<div class="reg_close_date">Registration closes at the end of {{#formatdate reg_close}}{{@formatteddate}}{{/formatdate}}</div>
+				</h3>
+				<p class="font_larger">{{desc}}</p>
+				<a class="font_larger" href="/events/events_home.php">Learn More</a>
+			</div>
 		</div>
 	</div>
-</div>
+{{/if}}

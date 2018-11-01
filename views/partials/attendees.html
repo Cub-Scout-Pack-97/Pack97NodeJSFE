@@ -1,0 +1,14 @@
+<div class="horCenter w80">
+	<input type="checkbox" class="attendees" name="attendees" id="attendees{{@index}}" value='{{{family}}}'>
+	<label for="attendees{{@index}}">
+		<span class='att main first_name '>{{#titlecase first_name}}{{/titlecase}}</span>
+		<span class='att main last_name '>{{#lastname last_name}}{{@last_name}}{{/lastname}}</span>
+		<span class='att main dollar_sign'>$</span><span class="att main cost">{{price}}</span>
+		<div class="sub">
+			<span class='att type'>{{type}}</span>
+			<span class='att detail'>{{detail}}</span>
+			<span class='att rank'>{{rank}}
+			<span class='att den'>{{den}}</span>
+		</div>
+	</label>
+</div>
