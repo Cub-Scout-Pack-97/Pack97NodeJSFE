@@ -1,0 +1,11 @@
+<link rel="stylesheet" type="text/css" href="/css/contact.css">
+<form method="POST" action="/contact/admin/newpass">
+	<h3 class="center">Create your new user account password</h3>
+	<input type="text" name="_id" value="{{_id}}" class="hide">
+	<input type="email" name="email" id="email" placeholder="Email address">
+	<input type="password" name="password" id="password" placeholder="New Password">
+	<input type="password" name="password_verify" id="password_verify" placeholder="Verify Password">
+	<p id="nonmatch" class="error center hide">Your passwords do not match</p>
+	<input type="submit" id="new_pass_sub" class="btn" disabled>
+</form>
+<script type="text/javascript" src="/js/events_admin.js"></script>

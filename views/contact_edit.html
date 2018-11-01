@@ -1,0 +1,40 @@
+<link rel="stylesheet" type="text/css" href="/css/contact.css">
+<form action="/contact/admin/update" method="POST">
+	<input type="input" name="_id" value="{{contact._id}}" class="hide">
+	<input type="input" name="first_name" value="{{contact.first_name}}" placeholder="First Name">
+	<input type="input" name="last_name" value="{{contact.last_name}}" placeholder="Last Name">
+	<input type="input" name="title" value="{{contact.title}}" placeholder="Title">
+	<input type="input" name="desc" value="{{contact.desc}}" placeholder="Description">
+	<input type="input" name="email" value="{{contact.email}}" placeholder="Email">
+	<input type="input" name="phone" value="{{contact.phone}}" placeholder="Phone">
+	<input type="input" name="gender" value="{{contact.gender}}" placeholder="gender">
+	<input type="input" name="bsaid" value="{{contact.bsaid}}" placeholder="BSA ID">
+	<label for="isCommitee">Committee</label>
+	<div class="check center">
+		<label class="switch">
+			<input type="checkbox" id="isCommitee" name="isCommitee" {{#if contact.isCommitee}} checked {{/if}}>
+			<span class="slider round"></span>
+		</label>
+	</div>
+	<label for="isLeader">Leader</label>
+	<div class="check center">
+		<label class="switch">
+			<input type="checkbox" id="isLeader" name="isLeader" {{#if contact.isLeader}} checked {{/if}}>
+			<span class="slider round"></span>
+		</label>
+	</div>
+	<label for="isUser">Administrator</label>
+	<div class="check center">
+		<label class="switch">
+			<input type="checkbox" id="isUser" name="isUser" {{#if contact.isUser}} checked {{/if}}>
+			<span class="slider round"></span>
+		</label>
+		<input type="checkbox" id="isUserChanged" name="isUserChanged" class="hide">
+	</div>
+	<div class="edit_scope center {{#unless contact.isUser}} hide {{/unless}}">
+		<label from="center">This user can edit</label>
+		{{>editScope}}
+	</div>
+	<input type="submit" class="btn" value="Save">
+</form>
+<script type="text/javascript" src="/js/events_admin.js"></script>
