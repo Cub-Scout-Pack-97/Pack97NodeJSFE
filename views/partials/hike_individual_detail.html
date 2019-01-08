@@ -1,0 +1,18 @@
+<div class="hikers_details " id="hikes296" style="">
+	<span onclick="closeHikersDetail(296)" class="close_view">
+		X
+	</span>
+	<div class="detail_title jsHike">Hikes</div>
+	{{each hikes}}
+		<div class="hike_local">
+			<a onclick="getData(230,&quot;#hikeModal&quot;,&quot;#hike_details_modal&quot;,&quot;hikeDetailSQL.php&quot;,&quot;hikeId&quot;)">
+				{{hike_title}}
+			</a>
+		</div>
+		<div class="hike_info">
+			<span class="hike_miles">A {{distance}} mile </span>
+			<span class="hike_type">{{hike_type}} hike on </span>
+			<span class="hike_date">{{date}}</span>
+		</div>
+	{{/each}}
+</div>
