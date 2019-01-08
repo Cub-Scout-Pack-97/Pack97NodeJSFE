@@ -184,6 +184,7 @@ const init = async () => {
 								data[cred + "_admin"] = cred;
 							}); 
 						}
+						console.log("\ntest\n");
 					    data["redirect"] = "~";
 						data["events"] = events;
 						return h.view('homepage',data);
@@ -565,6 +566,20 @@ const init = async () => {
 						});
 						return h.redirect('/events/admin/list/event_date/1');
 					}
+				}
+			},
+			{
+				method:'GET',
+				path:'/hike/admin/edit',
+				config: {
+					auth: {
+						mode: 'try',
+						strategy: 'session'
+					},
+					handler:(request,h) => {
+						const data = {};
+						return h.view('hike_form',data);
+					} 
 				}
 			},
 			{

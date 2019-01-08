@@ -59,14 +59,14 @@ $("#mm .item89").on('touchstart click',() => {window.location = '/contacts/admin
 //   });
 // }
 
-let iScrollPos = 0;
+// let iScrollPos = 0;
 
-$(window).scroll(function () {
-    var iCurScrollPos = $(this).scrollTop();
-    if (iCurScrollPos > iScrollPos) {
-        $('.imgHeader').css('top','-170px');
-    } else {
-       $('.imgHeader').css('top','-3px');
-    }
-    iScrollPos = iCurScrollPos;
-});
+// $(window).scroll(function () {
+//     var iCurScrollPos = $(this).scrollTop();
+//     if (iCurScrollPos > iScrollPos) {
+//         $('.imgHeader').css('top','-170px');
+//     } else {
+//        $('.imgHeader').css('top','-3px');
+//     }
+//     iScrollPos = iCurScrollPos;
+// });

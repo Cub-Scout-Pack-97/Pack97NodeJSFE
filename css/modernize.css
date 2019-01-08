@@ -350,9 +350,9 @@ li, .item84{
     background-size: cover;
     background-repeat: no-repeat;
     height:150px;
-    position: fixed;
+    /*position: fixed;
     top: -10px;
-    left: 0px;
+    left: 0px;*/
     box-shadow: 0px 5px 20px 10px rgba(255,255,255,1);
     right: 0px;
     /* margin-top: -3px; */
@@ -369,12 +369,10 @@ a.font_larger {
 	float:left;
 }
 .text_container {
-    float: left;
-    margin-left: 70px;
-    margin-top: 50px;
+    margin: auto;
+    width: 460px;
+    text-align: center;
     text-shadow: 0 0 10px #026;
-    /* background-color: rgba(0,34,104,0.5); */
-    /* box-shadow: 0px 0px 20px 10px rgba(0,34,104,0.5); */
 }
 select {
     background-color: #fff;
